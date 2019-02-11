@@ -69,7 +69,9 @@ class CustomDataset(Dataset):
         # (long_edge, short_edge) or [(long1, short1), (long2, short2), ...]
         self.img_scales = img_scale if isinstance(img_scale,
                                                   list) else [img_scale]
-        assert mmcv.is_list_of(self.img_scales, tuple)
+        #  yuan comment this line,I want to resize an img with a float scale factor
+        # assert mmcv.is_list_of(self.img_scales, tuple)
+
         # normalization configs
         self.img_norm_cfg = img_norm_cfg
 

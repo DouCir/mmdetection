@@ -7,7 +7,7 @@ from mmcv.runner import Runner, DistSamplerSeedHook
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 
 from mmdet.core import (DistOptimizerHook, DistEvalmAPHook,
-                        CocoDistEvalRecallHook, CocoDistEvalmAPHook)
+                        CocoDistEvalRecallHook, CocoDistEvalmAPHook, MatlabDistEvalMR)
 from mmdet.datasets import build_dataloader
 from mmdet.models import RPN
 from .env import get_root_logger
@@ -47,7 +47,7 @@ def train_detector(model,
                    dataset,
                    cfg,
                    distributed=False,
-                   validate=False,
+                   validate=True,
                    logger=None):
     if logger is None:
         logger = get_root_logger(cfg.log_level)
@@ -114,6 +114,8 @@ def _non_dist_train(model, dataset, cfg, validate=False):
     runner.register_training_hooks(cfg.lr_config, cfg.optimizer_config,
                                    cfg.checkpoint_config, cfg.log_config)
 
+    if validate:
+        runner.register_hook(MatlabDistEvalMR(cfg.data.val))
     if cfg.resume_from:
         runner.resume(cfg.resume_from)
     elif cfg.load_from:

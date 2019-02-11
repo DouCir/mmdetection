@@ -14,6 +14,7 @@ from torch.utils.data import Dataset
 from .coco_utils import results2json, fast_eval_recall
 from .mean_ap import eval_map
 from mmdet import datasets
+from .eval_miss_rate import eval_miss_rate
 
 
 class DistEvalHook(Hook):
@@ -101,6 +102,11 @@ class DistEvalHook(Hook):
 
     def evaluate(self):
         raise NotImplementedError
+
+
+class MatlabDistEvalMR(DistEvalHook):
+    def evaluate(self, runner, results):
+        eval_miss_rate()
 
 
 class DistEvalmAPHook(DistEvalHook):
