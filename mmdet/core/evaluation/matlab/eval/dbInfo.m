@@ -76,5 +76,5 @@ if(~isempty(vidId)), vidIds={vidIds{1}(vidId)}; end
 % pth=fileparts(mfilename('fullpath'));
 % pth=[pth filesep 'data-' subdir];
 % pth = 'G:/Caltech/Caltech';
-pth = '/media/ser606/Data/DoubleCircle/datasets/Caltech';
+pth = ['/media/',getenv('USER'),'/Data/DoubleCircle/datasets/Caltech'];
 end

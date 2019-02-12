@@ -58,8 +58,8 @@ def _data_func(data, device_id):
 
 
 def main():
-    configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
-
+    # configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
+    configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
     for config in configs:
         # load dataset
         cfg = mmcv.Config.fromfile(config)
@@ -67,7 +67,7 @@ def main():
         cfg.data.test.test_mode = True
         dataset = obj_from_dict(cfg.data.val, datasets, dict(test_mode=True))
         # load model
-        checkpoint_file = osp.join(cfg.work_dir, 'epoch_16.pth')
+        checkpoint_file = osp.join(cfg.work_dir, 'epoch_1.pth')
         model = build_detector(
             cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
         load_checkpoint(model, checkpoint_file)

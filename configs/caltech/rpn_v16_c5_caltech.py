@@ -1,23 +1,19 @@
 # model settings
 model = dict(
     type='RPN',
-    pretrained='/media/server606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
+    pretrained='/media/server606/Data/DoubleCircle/model/vgg16-397923af.pth',
     backbone=dict(
-        type='ResNet',
-        depth=50,
-        num_stages=3,
-        strides=(1, 2, 2),
-        dilations=(1, 1, 1),
-        out_indices=(2,),
-        stage_with_dcn=(False, False, False),
+        type='VGG',
+        depth=16,
+        num_stages=5,
+        out_indices=(4,),
         frozen_stages=1,
-        style='pytorch'
-    ),
+        with_last_pool=False,),
     neck=None,
     rpn_head=dict(
         type='RPNHead',
-        in_channels=1024,
-        feat_channels=512,
+        in_channels=512,
+        feat_channels=256,
         anchor_scales=[2.6, 3.38, 4.3940, 5.7122, 7.4259, 9.6536, 12.5497, 16.3146, 21.2090],
         anchor_ratios=[1.0 / 0.41],
         anchor_strides=[16],
@@ -36,7 +32,7 @@ train_cfg = dict(
         sampler=dict(
             type='RandomSampler',
             num=120,
-            pos_fraction=1.0 / 6,
+            pos_fraction=1.0/6,
             neg_pos_ub=-1,
             add_gt_as_proposals=False,
             pos_balance_sampling=False,
@@ -101,7 +97,7 @@ optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 lr_config = dict(
     policy='step',
     # warmup='linear',
-    # warmup_iters=6000,
+    # warmup_iters=5000,
     # warmup_ratio=1.0 / 3,
     step=[4])
 checkpoint_config = dict(interval=1)
@@ -117,7 +113,7 @@ log_config = dict(
 total_epochs = 20
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../../work_dirs/rpn_r50_c4_caltech'
+work_dir = '../../work_dirs/rpn_v16_c5_caltech'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

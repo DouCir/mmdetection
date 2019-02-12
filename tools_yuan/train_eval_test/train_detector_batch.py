@@ -16,7 +16,8 @@ Description: This script is used to train detectors with config files.
 
 def main():
     # configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
-    configs = ['../../configs/caltech/rpn_r50_c4_caltech.py']
+    # configs = ['../../configs/caltech/rpn_r50_c4_caltech.py']
+    configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
 
     for config in configs:
         # load dataset

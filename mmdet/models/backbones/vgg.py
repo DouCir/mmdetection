@@ -105,6 +105,10 @@ class VGG(nn.Module):
             start_idx = end_idx
         if not with_last_pool:
             vgg_layers.pop(-1)
+            """
+            Yuan fixed this bug 2019/02/12. if the last pool layer is skipped, the end index should be fixed.
+            """
+            self.range_sub_modules[-1][-1] -= 1
         self.module_name = 'features'
         self.add_module(self.module_name, nn.Sequential(*vgg_layers))
 
@@ -143,14 +147,20 @@ class VGG(nn.Module):
                 x = vgg_layer(x)
             if i in self.out_indices:
                 outs.append(x)
-        if self.num_classes > 0:
-            x = x.view(x.size(0), -1)
-            x = self.classifier(x)
-            outs.append(x)
-        if len(outs) == 1:
-            return outs[0]
-        else:
-            return tuple(outs)
+        """
+        Yuan comment following lines 2019/02/12
+        These lines are not useful in this project.
+        And more,they will make trouble in next program because of dimension error.
+        """
+        # if self.num_classes > 0:
+        #     x = x.view(x.size(0), -1)
+        #     x = self.classifier(x)
+        #     outs.append(x)
+        # if len(outs) == 1:
+        #     return outs[0]
+        # else:
+        #     return tuple(outs)
+        return tuple(outs)
 
     def train(self, mode=True):
         super(VGG, self).train(mode)
