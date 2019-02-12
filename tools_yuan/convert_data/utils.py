@@ -6,7 +6,7 @@ from mmcv.utils.progressbar import ProgressBar
 
 
 def parse_xml(args):
-    xml_path, img_path = args
+    xml_path, img_path, flag = args
     tree = ET.parse(xml_path)
     root = tree.getroot()
     size = root.find('size')
@@ -36,17 +36,19 @@ def parse_xml(args):
             bboxes.append(bbox)
             labels.append(1)
     if not bboxes:
-        return None
-        # bboxes = np.zeros((0, 4))
-        # labels = np.zeros((0,))
+        if flag == 'train':
+            return None  # the image without pedestrian can be ignored during training
+        else:
+            bboxes = np.zeros((0, 4))
+            labels = np.zeros((0,))
     else:
-        bboxes = np.array(bboxes, ndmin=2) - 1  # why does he decrease by one???
+        bboxes = np.array(bboxes, ndmin=2)
         labels = np.array(labels)
     if not bboxes_ignore:
         bboxes_ignore = np.zeros((0, 4))
         labels_ignore = np.zeros((0,))
     else:
-        bboxes_ignore = np.array(bboxes_ignore, ndmin=2) - 1
+        bboxes_ignore = np.array(bboxes_ignore, ndmin=2)
         labels_ignore = np.array(labels_ignore)
     annotation = {
         'filename': img_path,

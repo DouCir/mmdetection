@@ -1,12 +1,8 @@
-import os.path as osp
 import xml.etree.ElementTree as ET
-
-import mmcv
-import numpy as np
 import json
 
 """
-author: Yuan Yuan
+Author: Yuan Yuan
 Date:2018/12/16
 Location:SCU
 """
@@ -123,7 +119,7 @@ class CoCoData(object):
             assert occlusion <= 2 and occlusion >= 0
             # visibility ratio
             vis_ratio = float(obj.find('vis_ratio').text)  # for caltech dataset
-            #vis_ratio = float(2-occlusion)   # for kaist dataset
+            # vis_ratio = float(2-occlusion)   # for kaist dataset
             # 'Reasonable' subset
             if name == 'person':
                 self.annotations.append(create_annotation(

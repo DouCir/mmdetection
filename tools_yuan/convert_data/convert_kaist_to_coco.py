@@ -1,8 +1,14 @@
 import mmcv
 import numpy as np
 import os.path as osp
-from tools.convert_datasets.voc_to_coco import CoCoData
+from tools_yuan.convert_data.voc_to_coco import CoCoData
 import getpass
+
+"""
+Author: Yuan Yuan
+Date:2018/12/16
+Location:SCU
+"""
 
 
 def main():

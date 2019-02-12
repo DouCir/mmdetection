@@ -1,21 +1,20 @@
-import argparse
-
 import torch
 import mmcv
-from mmcv.runner import load_checkpoint, parallel_test, obj_from_dict
+from mmcv.runner import load_checkpoint, obj_from_dict
 from mmcv.parallel import scatter, collate, MMDataParallel
-
 from mmdet import datasets
-from mmdet.core import results2json, coco_eval, matlab_eval_MR
+from mmdet.core import eval_miss_rate
 from mmdet.datasets import build_dataloader
-from mmdet.models import build_detector, detectors
+from mmdet.models import build_detector
 import os.path as osp
 import numpy as np
 import os
-import sys
 
-sys.setrecursionlimit(10 ** 8)
-
+"""
+Author:Yuan Yuan
+Date:2019/02/11
+Description: This script is used to evaluate pre-trained detectors.
+"""
 
 def single_test(model, data_loader, show=False):
     model.eval()
@@ -33,7 +32,15 @@ def single_test(model, data_loader, show=False):
         if os.path.exists(file_path):
             os.remove(file_path)
         os.mknod(file_path)
-        np.savetxt(file_path, result[0])
+        """ 
+        For faster-rcnn, the result is a list, each element in list is result for a object class.
+        In pedestrian detection,there is only one class.
+        For RPN,the result is a numpy.The result of RPN is category-independent.
+        """
+        if isinstance(result, list):
+            np.savetxt(file_path, result[0])
+        else:
+            np.savetxt(file_path, result)
 
         if show:
             model.module.show_result(data, result,
@@ -51,7 +58,7 @@ def _data_func(data, device_id):
 
 
 def main():
-    configs = ['../configs/caltech/faster_rcnn_v16_fpn_caltech_1x.py']
+    configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
 
     for config in configs:
         # load dataset
@@ -60,7 +67,7 @@ def main():
         cfg.data.test.test_mode = True
         dataset = obj_from_dict(cfg.data.val, datasets, dict(test_mode=True))
         # load model
-        checkpoint_file = osp.join(cfg.work_dir, 'epoch_1.pth')
+        checkpoint_file = osp.join(cfg.work_dir, 'epoch_16.pth')
         model = build_detector(
             cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
         load_checkpoint(model, checkpoint_file)
@@ -73,8 +80,8 @@ def main():
             num_gpus=1,
             dist=False,
             shuffle=False)
-        # outputs = single_test(model, data_loader, False)
-        matlab_eval_MR()
+        outputs = single_test(model, data_loader, False)
+        eval_miss_rate()
 
 
 if __name__ == '__main__':

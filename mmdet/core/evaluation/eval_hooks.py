@@ -79,29 +79,68 @@ class DistEvalHook(Hook):
                     return_loss=False, rescale=True, **data_gpu)
             results[idx] = result
 
+            """
+            yuan add following code for evaluating miss rate using matlab code.
+            For each image, detection result will be writen into it's corresponding text file.
+            Matlab script will load those detection results and perform evaluation.
+            It is finished with matlab engine on background.
+            """
+            # image path
+            img_path = self.dataset.img_infos[idx]['filename']
+            res_path = img_path.replace('images', 'res')
+            res_path = res_path.replace('.jpg', '.txt')
+            if os.path.exists(res_path):
+                os.remove(res_path)
+            os.mknod(res_path)
+            """ 
+            For faster-rcnn, the result is a list, each element in list is result for a object class.
+            In pedestrian detection,there is only one class.
+            For RPN,the result is a numpy.The result of RPN is category-independent.
+            """
+            if isinstance(result, list):
+                np.savetxt(res_path, result[0])
+            else:
+                np.savetxt(res_path, result)
+
             batch_size = runner.world_size
             for _ in range(batch_size):
                 prog_bar.update()
 
-        if runner.rank == 0:
-            print('\n')
-            self._barrier(runner.rank, runner.world_size)
-            for i in range(1, runner.world_size):
-                tmp_file = osp.join(runner.work_dir, 'temp_{}.pkl'.format(i))
-                tmp_results = mmcv.load(tmp_file)
-                for idx in range(i, len(results), runner.world_size):
-                    results[idx] = tmp_results[idx]
-                os.remove(tmp_file)
-            self.evaluate(runner, results)
-        else:
-            tmp_file = osp.join(runner.work_dir,
-                                'temp_{}.pkl'.format(runner.rank))
-            mmcv.dump(results, tmp_file)
-            self._barrier(runner.rank, runner.world_size)
+        """
+        yuan comment following code because of new evaluation method.
+        """
+        # if runner.rank == 0:
+        #     print('\n')
+        #     self._barrier(runner.rank, runner.world_size)
+        #     for i in range(1, runner.world_size):
+        #         tmp_file = osp.join(runner.work_dir, 'temp_{}.pkl'.format(i))
+        #         tmp_results = mmcv.load(tmp_file)
+        #         for idx in range(i, len(results), runner.world_size):
+        #             results[idx] = tmp_results[idx]
+        #         os.remove(tmp_file)
+        #     self.evaluate(runner, results)
+        # else:
+        #     tmp_file = osp.join(runner.work_dir,
+        #                         'temp_{}.pkl'.format(runner.rank))
+        #     mmcv.dump(results, tmp_file)
+        #     self._barrier(runner.rank, runner.world_size)
+
+        """
+        yuan add following line
+        """
+        self.evaluate(runner, results)
+
         self._barrier(runner.rank, runner.world_size)
 
     def evaluate(self):
         raise NotImplementedError
+
+
+"""
+Author:Yuan Yuan
+Date:2019/02/11
+Description:this class is a hook class for launching Matlab evaluation script.
+"""
 
 
 class MatlabDistEvalMR(DistEvalHook):

@@ -2,17 +2,21 @@ from __future__ import division
 
 from mmcv import Config
 from mmcv.runner import obj_from_dict
-
 from mmdet import datasets, __version__
-from mmdet.apis import (train_detector, init_dist, get_root_logger,
-                        set_random_seed)
+from mmdet.apis import (train_detector, get_root_logger)
 from mmdet.models import build_detector
 import os
 
+"""
+Author:Yuan Yuan
+Date:2019/02/11
+Description: This script is used to train detectors with config files.
+"""
+
 
 def main():
-
-    configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
+    # configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
+    configs = ['../../configs/caltech/rpn_r50_c4_caltech.py']
 
     for config in configs:
         # load dataset

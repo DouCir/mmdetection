@@ -1,12 +1,12 @@
 import os.path as osp
 import mmcv
 import numpy as np
-from tools.convert_datasets.utils import parse_xml
-from tools.convert_datasets.utils import track_progress_yuan
+from tools_yuan.convert_data.utils import parse_xml
+from tools_yuan.convert_data.utils import track_progress_yuan
 import getpass
 
 """
-author: Yuan Yuan
+Author: Yuan Yuan
 Date:2018/12/16
 Location:SCU
 """
