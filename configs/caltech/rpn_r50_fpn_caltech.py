@@ -17,7 +17,7 @@ model = dict(
         type='FPN',
         in_channels=[256, 512, 1024],
         out_channels=256,
-        num_outs=4,
+        num_outs=3,
     ),
     rpn_head=dict(
         type='RPNHead',
@@ -25,8 +25,8 @@ model = dict(
         feat_channels=256,
         anchor_scales=[2.6, 3.38, 4.3940, 5.7122, 7.4259, 9.6536, 12.5497, 16.3146, 21.2090],
         anchor_ratios=[1.0 / 0.41],
-        anchor_strides=[4, 8, 16, 32],
-        anchor_base_sizes=[16, 16, 16, 16],
+        anchor_strides=[4, 8, 16],
+        anchor_base_sizes=[16, 16, 16],
         target_means=[.0, .0, .0, .0],
         target_stds=[1.0, 1.0, 1.0, 1.0],
         use_sigmoid_cls=True))
@@ -54,8 +54,8 @@ train_cfg = dict(
 test_cfg = dict(
     rpn=dict(
         nms_across_levels=False,
-        nms_pre=40000,
-        nms_post=40000,
+        nms_pre=10000,
+        nms_post=10000,
         max_num=40,
         nms_thr=0.7,
         min_bbox_size=0))
@@ -101,7 +101,7 @@ data = dict(
         with_label=False,
         test_mode=True))
 # optimizer
-optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
 # runner configs
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 lr_config = dict(
@@ -109,7 +109,7 @@ lr_config = dict(
     # warmup='linear',
     # warmup_iters=6000,
     # warmup_ratio=1.0 / 3,
-    step=[4])
+    step=[4, 8])
 checkpoint_config = dict(interval=1)
 # yapf:disable
 log_config = dict(
