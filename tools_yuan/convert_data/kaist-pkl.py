@@ -13,7 +13,7 @@ Location:SCU
 
 
 def main():
-    xml_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt/annotations-xml-en/')
+    xml_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt/annotations-xml/')
     pkl_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt/annotations-pkl/')
     txt_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt/imageSets/')
     img_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt/images/')
@@ -35,8 +35,9 @@ def main():
     # idx_train = permutation[0:num_train + 1]
     xml_train_paths = xml_all_paths
     img_train_paths = img_all_paths
+    flags = ['train' for _ in img_train_paths]
     train_annotations = track_progress_yuan(parse_xml,
-                                            list(zip(xml_train_paths, img_train_paths)))
+                                            list(zip(xml_train_paths, img_train_paths, flags)))
     mmcv.dump(train_annotations, osp.join(pkl_dir, 'train-all.pkl'))
 
     # validation images
@@ -52,9 +53,10 @@ def main():
     img_test_names = mmcv.list_from_file(test_filelist)
     xml_test_paths = [osp.join(xml_dir, '{}.xml'.format(img_name)) for img_name in img_test_names]
     img_test_paths = [osp.join(img_dir, '{}.jpg'.format(img_name).replace('/I', '/visible/I')) for img_name in
-                      img_all_names]
+                      img_test_names]
+    flags = ['test' for _ in img_test_paths]
     test_annotations = track_progress_yuan(parse_xml,
-                                           list(zip(xml_test_paths, img_test_paths)))
+                                           list(zip(xml_test_paths, img_test_paths, flags)))
     mmcv.dump(test_annotations, osp.join(pkl_dir, 'test-all.pkl'))
 
     # day test images
@@ -62,9 +64,10 @@ def main():
     img_test_names = mmcv.list_from_file(test_filelist)
     xml_test_paths = [osp.join(xml_dir, '{}.xml'.format(img_name)) for img_name in img_test_names]
     img_test_paths = [osp.join(img_dir, '{}.jpg'.format(img_name).replace('/I', '/visible/I')) for img_name in
-                      img_all_names]
+                      img_test_names]
+    flags = ['test' for _ in img_test_paths]
     test_annotations = track_progress_yuan(parse_xml,
-                                           list(zip(xml_test_paths, img_test_paths)))
+                                           list(zip(xml_test_paths, img_test_paths, flags)))
     mmcv.dump(test_annotations, osp.join(pkl_dir, 'test-day.pkl'))
 
     # night test images
@@ -72,9 +75,10 @@ def main():
     img_test_names = mmcv.list_from_file(test_filelist)
     xml_test_paths = [osp.join(xml_dir, '{}.xml'.format(img_name)) for img_name in img_test_names]
     img_test_paths = [osp.join(img_dir, '{}.jpg'.format(img_name).replace('/I', '/visible/I')) for img_name in
-                      img_all_names]
+                      img_test_names]
+    flags = ['test' for _ in img_test_paths]
     test_annotations = track_progress_yuan(parse_xml,
-                                           list(zip(xml_test_paths, img_test_paths)))
+                                           list(zip(xml_test_paths, img_test_paths, flags)))
     mmcv.dump(test_annotations, osp.join(pkl_dir, 'test-night.pkl'))
 
 

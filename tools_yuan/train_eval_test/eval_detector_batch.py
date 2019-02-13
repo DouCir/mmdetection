@@ -3,7 +3,7 @@ import mmcv
 from mmcv.runner import load_checkpoint, obj_from_dict
 from mmcv.parallel import scatter, collate, MMDataParallel
 from mmdet import datasets
-from mmdet.core import eval_miss_rate
+from mmdet.core import eval_kaist_mr,eval_caltech_mr
 from mmdet.datasets import build_dataloader
 from mmdet.models import build_detector
 import os.path as osp
@@ -28,6 +28,8 @@ def single_test(model, data_loader, show=False):
         # for test
         img_path = data_loader.dataset.img_infos[i]['filename']
         file_path = img_path.replace('images', 'res')
+        if 'visible' in file_path:
+            file_path = file_path.replace('/visible/', '/')
         file_path = file_path.replace('.jpg', '.txt')
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -59,7 +61,7 @@ def _data_func(data, device_id):
 
 def main():
     # configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
-    configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
+    configs = ['../../configs/kaist/faster_rcnn_r50_element-wise-add_kaist.py']
     for config in configs:
         # load dataset
         cfg = mmcv.Config.fromfile(config)
@@ -80,8 +82,11 @@ def main():
             num_gpus=1,
             dist=False,
             shuffle=False)
-        outputs = single_test(model, data_loader, False)
-        eval_miss_rate()
+        #outputs = single_test(model, data_loader, False)
+        if 'caltech' in config:
+            eval_caltech_mr()
+        if 'kaist' in config:
+            eval_kaist_mr()
 
 
 if __name__ == '__main__':

@@ -10,6 +10,11 @@ Description: this file defines a function to start Matlab engine on background
 import matlab.engine
 
 
-def eval_miss_rate():
+def eval_caltech_mr():
     eng = matlab.engine.start_matlab()
     eng.dbEval(nargout=0)
+
+
+def eval_kaist_mr():
+    eng = matlab.engine.start_matlab()
+    eng.kaist_eval(nargout=0)

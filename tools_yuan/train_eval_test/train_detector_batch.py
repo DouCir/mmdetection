@@ -17,10 +17,11 @@ Description: This script is used to train detectors with config files.
 def main():
     # configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
     # configs = ['../../configs/caltech/rpn_r50_c4_caltech.py']
-    # configs = ['../../configs/caltech/rpn_r50_fpn_caltech.py']
+    # configs = ['../../configs/caltech/rpn_r50_fpn_finest_caltech.py']
     # configs = ['../../configs/caltech/faster_rcnn_r50_c4_caltech.py']
     # configs = ['../../configs/caltech/rpn_r50_c4_caltech.py']
-    configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
+    # configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
+    configs = ['../../configs/kaist/faster_rcnn_r50_element-wise-add_kaist.py']
 
     for config in configs:
         # load dataset

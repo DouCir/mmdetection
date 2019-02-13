@@ -14,7 +14,7 @@ from torch.utils.data import Dataset
 from .coco_utils import results2json, fast_eval_recall
 from .mean_ap import eval_map
 from mmdet import datasets
-from .eval_miss_rate import eval_miss_rate
+from .eval_miss_rate import eval_caltech_mr, eval_kaist_mr
 
 
 class DistEvalHook(Hook):
@@ -139,13 +139,18 @@ class DistEvalHook(Hook):
 """
 Author:Yuan Yuan
 Date:2019/02/11
-Description:this class is a hook class for launching Matlab evaluation script.
+Description:these two hook classes are used for launching Matlab evaluation script.
 """
 
 
-class MatlabDistEvalMR(DistEvalHook):
+class DistEvalCaltechMR(DistEvalHook):
     def evaluate(self, runner, results):
-        eval_miss_rate()
+        eval_caltech_mr()
+
+
+class DistEvalKaistMR(DistEvalHook):
+    def evaluate(self, runner, results):
+        eval_kaist_mr()
 
 
 class DistEvalmAPHook(DistEvalHook):

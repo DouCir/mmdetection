@@ -17,7 +17,8 @@ class FPN(nn.Module):
                  end_level=-1,
                  add_extra_convs=False,
                  normalize=None,
-                 activation=None):
+                 activation=None,
+                 out_indices=None):
         super(FPN, self).__init__()
         assert isinstance(in_channels, list)
         self.in_channels = in_channels
@@ -26,6 +27,7 @@ class FPN(nn.Module):
         self.num_outs = num_outs
         self.activation = activation
         self.with_bias = normalize is None
+        self.out_indices = out_indices
 
         if end_level == -1:
             self.backbone_end_level = self.num_ins
@@ -126,4 +128,10 @@ class FPN(nn.Module):
                 for i in range(used_backbone_levels + 1, self.num_outs):
                     # BUG: we should add relu before each extra conv
                     outs.append(self.fpn_convs[i](outs[-1]))
-        return tuple(outs)
+        """
+        Yuan add following lines for performing 'finest layer of FPN' experiment.
+        """
+        if self.out_indices is not None:
+            return tuple([outs[i] for i in self.out_indices])
+        else:
+            return tuple(outs)

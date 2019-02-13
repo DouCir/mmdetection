@@ -8,7 +8,16 @@ from .mask_rcnn import MaskRCNN
 from .cascade_rcnn import CascadeRCNN
 from .retinanet import RetinaNet
 
+"""
+Yuan add following lines.
+"""
+from .base_mul import BaseDetectorMul
+from .two_stage_mul import TwoStageDetectorMul
+from .faster_rcnn_mul import FasterRCNNMul
+
+
 __all__ = [
     'BaseDetector', 'SingleStageDetector', 'TwoStageDetector', 'RPN',
-    'FastRCNN', 'FasterRCNN', 'MaskRCNN', 'CascadeRCNN', 'RetinaNet'
+    'FastRCNN', 'FasterRCNN', 'MaskRCNN', 'CascadeRCNN', 'RetinaNet',
+    'TwoStageDetectorMul', 'FasterRCNNMul', 'BaseDetectorMul'
 ]
