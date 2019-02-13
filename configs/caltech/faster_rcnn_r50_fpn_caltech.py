@@ -1,27 +1,29 @@
 # model settings
 model = dict(
     type='FasterRCNN',
-    pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
+    pretrained='/media/server606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
     backbone=dict(
         type='ResNet',
         depth=50,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
-        style='pytorch'),
+        style='pytorch'
+    ),
     neck=dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
         out_channels=256,
+        out_indices=[0],
         num_outs=4),
     rpn_head=dict(
         type='RPNHead',
         in_channels=256,
         feat_channels=256,
-        anchor_scales=[10, 12, 14, 16, 18],
-        anchor_ratios=[0.3, 0.4, 0.5],
-        anchor_strides=[4, 8, 16, 32],
-        anchor_base_sizes=[4, 8, 16, 32],
+        anchor_scales=[2.6, 3.38, 4.3940, 5.7122, 7.4259, 9.6536, 12.5497, 16.3146, 21.2090],
+        anchor_ratios=[1.0 / 0.41],
+        anchor_strides=[4],
+        anchor_base_sizes=[16],
         target_means=[.0, .0, .0, .0],
         target_stds=[1.0, 1.0, 1.0, 1.0],
         use_sigmoid_cls=True),
@@ -29,7 +31,7 @@ model = dict(
         type='SingleRoIExtractor',
         roi_layer=dict(type='RoIAlign', out_size=7, sample_num=-1),
         out_channels=256,
-        featmap_strides=[4, 8, 16, 32]),
+        featmap_strides=[4]),
     bbox_head=dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
@@ -52,8 +54,8 @@ train_cfg = dict(
             ignore_iof_thr=-1),
         sampler=dict(
             type='RandomSampler',
-            num=128,
-            pos_fraction=0.5,
+            num=120,
+            pos_fraction=1.0/6,
             neg_pos_ub=-1,
             add_gt_as_proposals=False,
             pos_balance_sampling=False,
@@ -81,16 +83,16 @@ train_cfg = dict(
 test_cfg = dict(
     rpn=dict(
         nms_across_levels=False,
-        nms_pre=2000,
-        nms_post=2000,
-        max_num=300,
+        nms_pre=10000,
+        nms_post=10000,
+        max_num=200,
         nms_thr=0.7,
         min_bbox_size=0),
     rcnn=dict(
         score_thr=0.5, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'CaltechDataset'
-data_root = '/media/ser606/Data/DoubleCircle/datasets/Caltech/'
+data_root = '/media/server606/Data/DoubleCircle/datasets/Caltech/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 data = dict(
@@ -100,20 +102,20 @@ data = dict(
         type=dataset_type,
         ann_file=data_root + 'annotations-pkl/train-all.pkl',
         img_prefix=data_root + 'images/',
-        img_scale=1.6,
+        img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
-        size_divisor=None,
+        size_divisor=32,
         flip_ratio=0.5,
         with_mask=False,
         with_crowd=True,
         with_label=True),
     val=dict(
-        type='CocoDataset',
-        ann_file=data_root + 'annotations-json/test-all.json',
+        type=dataset_type,
+        ann_file=data_root + 'annotations-pkl/test-all.pkl',
         img_prefix=data_root + 'images/',
-        img_scale=1.6,
+        img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
-        size_divisor=None,
+        size_divisor=32,
         flip_ratio=0,
         with_mask=False,
         with_crowd=True,
@@ -122,15 +124,15 @@ data = dict(
         type='CocoDataset',
         ann_file=data_root + 'annotations-json/test-all.json',
         img_prefix=data_root + 'images/',
-        img_scale=1.6,
+        img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
-        size_divisor=None,
+        size_divisor=32,
         flip_ratio=0,
         with_mask=False,
         with_label=False,
         test_mode=True))
 # optimizer
-optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
@@ -138,7 +140,7 @@ lr_config = dict(
     # warmup='linear',
     # warmup_iters=2000,
     # warmup_ratio=1.0 / 3,
-    step=[5])
+    step=[4, 8])
 checkpoint_config = dict(interval=1)
 # yapf:disable
 log_config = dict(
@@ -152,7 +154,7 @@ log_config = dict(
 total_epochs = 20
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../work_dirs/faster_rcnn_r50_fpn_caltech_1x'
+work_dir = '../../work_dirs/faster_rcnn_r50_fpn_caltech_1x'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
