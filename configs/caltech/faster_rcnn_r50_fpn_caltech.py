@@ -14,16 +14,16 @@ model = dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
         out_channels=256,
-        out_indices=[0],
+        out_indices=[0, 1, 2, 3],
         num_outs=4),
     rpn_head=dict(
         type='RPNHead',
         in_channels=256,
         feat_channels=256,
-        anchor_scales=[2.6, 3.38, 4.3940, 5.7122, 7.4259, 9.6536, 12.5497, 16.3146, 21.2090],
-        anchor_ratios=[1.0 / 0.41],
-        anchor_strides=[4],
-        anchor_base_sizes=[16],
+        anchor_scales=[8, 10, 12, 14],
+        anchor_ratios=[1.0 / 0.5, 1.0],
+        anchor_strides=[4, 8, 16, 32],
+        anchor_base_sizes=[4, 8, 16, 32],
         target_means=[.0, .0, .0, .0],
         target_stds=[1.0, 1.0, 1.0, 1.0],
         use_sigmoid_cls=True),
@@ -31,7 +31,7 @@ model = dict(
         type='SingleRoIExtractor',
         roi_layer=dict(type='RoIAlign', out_size=7, sample_num=-1),
         out_channels=256,
-        featmap_strides=[4]),
+        featmap_strides=[4, 8, 16, 32]),
     bbox_head=dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
@@ -48,14 +48,14 @@ train_cfg = dict(
     rpn=dict(
         assigner=dict(
             type='MaxIoUAssigner',
-            pos_iou_thr=0.7,
+            pos_iou_thr=0.5,
             neg_iou_thr=0.3,
             min_pos_iou=0.3,
             ignore_iof_thr=-1),
         sampler=dict(
             type='RandomSampler',
-            num=120,
-            pos_fraction=1.0/6,
+            num=256,
+            pos_fraction=0.5,
             neg_pos_ub=-1,
             add_gt_as_proposals=False,
             pos_balance_sampling=False,
@@ -63,18 +63,26 @@ train_cfg = dict(
         allowed_border=0,
         pos_weight=-1,
         smoothl1_beta=1.0,
-        debug=False),
+        debug=False,
+        nms=dict(
+            nms_across_levels=False,
+            nms_pre=20000,
+            nms_post=20000,
+            max_num=5000,
+            nms_thr=0.9,
+            min_bbox_size=0),
+        ),
     rcnn=dict(
         assigner=dict(
             type='MaxIoUAssigner',
             pos_iou_thr=0.5,
-            neg_iou_thr=0.5,
-            min_pos_iou=0.5,
+            neg_iou_thr=0.3,
+            min_pos_iou=0.3,
             ignore_iof_thr=-1),
         sampler=dict(
-            type='OHEMSampler',
-            num=128,
-            pos_fraction=0.25,
+            type='RandomSampler',
+            num=200,
+            pos_fraction=0.5,
             neg_pos_ub=-1,
             add_gt_as_proposals=True
         ),
@@ -85,11 +93,11 @@ test_cfg = dict(
         nms_across_levels=False,
         nms_pre=10000,
         nms_post=10000,
-        max_num=200,
+        max_num=300,
         nms_thr=0.7,
-        min_bbox_size=0),
+        min_bbox_size=16),
     rcnn=dict(
-        score_thr=0.5, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
+        score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'CaltechDataset'
 data_root = '/media/server606/Data/DoubleCircle/datasets/Caltech/'
@@ -151,7 +159,7 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 20
+total_epochs = 40
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '../../work_dirs/faster_rcnn_r50_fpn_caltech_1x'

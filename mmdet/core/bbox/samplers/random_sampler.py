@@ -37,6 +37,7 @@ class RandomSampler(BaseSampler):
         pos_inds = torch.nonzero(assign_result.gt_inds > 0)
         if pos_inds.numel() != 0:
             pos_inds = pos_inds.squeeze(1)
+        # print('RandomSampler: the number of positive:', pos_inds.numel())
         if pos_inds.numel() <= num_expected:
             return pos_inds
         else:
