@@ -1,7 +1,7 @@
 # model settings
 model = dict(
     type='RPN',
-    pretrained='/media/server606/Data/DoubleCircle/model/vgg16-397923af.pth',
+    pretrained='/media/ser606/Data/DoubleCircle/model/vgg16-397923af.pth',
     backbone=dict(
         type='VGG',
         depth=16,
@@ -51,7 +51,7 @@ test_cfg = dict(
         min_bbox_size=0))
 # dataset settings
 dataset_type = 'CaltechDataset'
-data_root = '/media/server606/Data/DoubleCircle/datasets/Caltech/'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/Caltech/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 data = dict(

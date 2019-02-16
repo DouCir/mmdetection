@@ -60,7 +60,7 @@ def _data_func(data, device_id):
 
 
 def main():
-    # configs = ['../../configs/caltech/rpn_vgg16_fpn_caltech.py']
+    # configs = ['../../configs/caltech/rpn_v16_fpn_caltech.py']
     configs = ['../../configs/kaist/faster_rcnn_r50_element-wise-add_kaist.py']
     for config in configs:
         # load dataset

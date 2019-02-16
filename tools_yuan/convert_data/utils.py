@@ -28,7 +28,7 @@ def parse_xml(args):
             int(float(bnd_box.find('xmax').text)),
             int(float(bnd_box.find('ymax').text))
         ]
-        if name != 'person' or difficult > 0 or occlusion > 0 or (bbox[3] - bbox[1] + 1) < 50:
+        if name != 'person' or difficult > 0 or occlusion > 0 or (bbox[3] - bbox[1] + 1) < 55:
         # if name != 'person'  or (bbox[3] - bbox[1] + 1) < 50: # for caltech_new
             bboxes_ignore.append(bbox)
             labels_ignore.append(0)

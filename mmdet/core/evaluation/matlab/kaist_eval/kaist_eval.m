@@ -7,7 +7,7 @@
 
 %% parameters setting
 pLoad={'lbls',{'person'},'ilbls',{'people','person?','cyclist'},'squarify',{3,.41}};  % for traing and test (common)
-pLoad = [pLoad, 'hRng',[45 inf], 'vType',{{'none','partial'}},'xRng',[5 635],'yRng',[5 475]];  % for testing config
+pLoad = [pLoad, 'hRng',[55 inf], 'vType',{{'none','partial'}},'xRng',[5 635],'yRng',[5 475]];  % for testing config
 reapply = 1;  
 thr = 0.5;
 mul = 0;
