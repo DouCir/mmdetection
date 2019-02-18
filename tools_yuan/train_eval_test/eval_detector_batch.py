@@ -61,12 +61,20 @@ def _data_func(data, device_id):
 
 def main():
     # configs = ['../../configs/caltech/rpn_v16_fpn_caltech.py']
-    configs = ['../../configs/kaist/faster_rcnn_r50_element-wise-add_kaist.py']
+    configs = ['../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py']
     for config in configs:
         # load dataset
         cfg = mmcv.Config.fromfile(config)
         cfg.model.pretrained = None
         cfg.data.test.test_mode = True
+
+        temp_file = osp.join('/media/ser606/Data/DoubleCircle/temp/temp.txt')
+        fo = open(temp_file, 'w+')
+        str_write = cfg.work_dir.replace('../../',
+                                         '/media/ser606/Data/DoubleCircle/project/mmdetection/mmdetection')
+        fo.write(str_write)
+        fo.close()
+
         dataset = obj_from_dict(cfg.data.val, datasets, dict(test_mode=True))
         # load model
         checkpoint_file = osp.join(cfg.work_dir, 'epoch_1.pth')
@@ -82,7 +90,7 @@ def main():
             num_gpus=1,
             dist=False,
             shuffle=False)
-        #outputs = single_test(model, data_loader, False)
+        outputs = single_test(model, data_loader, False)
         if 'caltech' in config:
             eval_caltech_mr()
         if 'kaist' in config:

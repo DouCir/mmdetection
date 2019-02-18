@@ -7,7 +7,7 @@
 
 %% parameters setting
 pLoad={'lbls',{'person'},'ilbls',{'people','person?','cyclist'},'squarify',{3,.41}};  % for traing and test (common)
-pLoad = [pLoad, 'hRng',[55 inf], 'vType',{{'none','partial'}},'xRng',[5 635],'yRng',[5 475]];  % for testing config
+pLoad = [pLoad, 'hRng',[50 inf], 'vType',{{'none','partial'}},'xRng',[5 635],'yRng',[5 475]];  % for testing config
 reapply = 1;  
 thr = 0.5;
 mul = 0;
@@ -23,15 +23,24 @@ subset =[dataDir,'/imageSets/test-all-20.txt'];
 [gt,dt]=bbGt2('loadAll',gtDir,dtDir,pLoad,subset);
 for ii=1:length(dt)
     if ~isempty(dt{ii})
-        dt{ii}(3) = dt{ii}(3) - dt{ii}(1) + 1;
-        dt{ii}(4) = dt{ii}(4) - dt{ii}(2) + 1;
+        dt{ii}(:,3) = dt{ii}(:,3) - dt{ii}(:,1) + 1;
+        dt{ii}(:,4) = dt{ii}(:,4) - dt{ii}(:,2) + 1;
     end
 end
 [gt,dt] = bbGt2('evalRes',gt,dt,thr,mul);
 [fp,tp,score,miss] = bbGt2('compRoc',gt,dt,1,ref);
 miss=exp(mean(log(max(1e-10,1-miss)))); 
 roc=[score fp tp];
-fprintf('log-average miss rate = %.2f%%\n',miss*100);
+fprintf('\nlog-average miss rate = %.2f%%\n',miss*100);
+
+fid = fopen('/media/ser606/Data/DoubleCircle/temp/temp.txt','r');
+str = fgets(fid);
+fclose(fid);
+
+fid = fopen(str,'a+');
+fprintf(fid,'log-average miss rate = %.2f%%\n',miss*100);
+fclose(fid);
+
 % optionally plot roc
 if show > 0
     figure(show); 

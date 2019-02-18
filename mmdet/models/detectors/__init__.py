@@ -14,10 +14,12 @@ Yuan add following lines.
 from .base_mul import BaseDetectorMul
 from .two_stage_mul import TwoStageDetectorMul
 from .faster_rcnn_mul import FasterRCNNMul
-
+from .faster_rcnn_fpn_add import TwoStageDetectorFPNAdd
+from .faster_rcnn_fpn_cat import FasterRCNNMulFPNCat
 
 __all__ = [
     'BaseDetector', 'SingleStageDetector', 'TwoStageDetector', 'RPN',
     'FastRCNN', 'FasterRCNN', 'MaskRCNN', 'CascadeRCNN', 'RetinaNet',
-    'TwoStageDetectorMul', 'FasterRCNNMul', 'BaseDetectorMul'
+    'TwoStageDetectorMul', 'FasterRCNNMul', 'BaseDetectorMul',
+    'TwoStageDetectorFPNAdd', 'FasterRCNNMulFPNCat'
 ]

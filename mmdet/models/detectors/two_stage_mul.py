@@ -107,8 +107,13 @@ class TwoStageDetectorMul(BaseDetectorMul, RPNTestMixin, BBoxTestMixin,
             rpn_losses = self.rpn_head.loss(*rpn_loss_inputs)
             losses.update(rpn_losses)
 
-            proposal_inputs = rpn_outs + (img_meta, self.test_cfg.rpn)
+            """
+            edited by Yuan,original code use same nms config of RPN during training and testing.
+            they are different now, more proposals can be output to next step during training.
+            """
+            proposal_inputs = rpn_outs + (img_meta, self.train_cfg.rpn.nms)
             proposal_list = self.rpn_head.get_bboxes(*proposal_inputs)
+            # print('number of proposals:{}'.format(len(proposal_list[0])))
         else:
             proposal_list = proposals
 

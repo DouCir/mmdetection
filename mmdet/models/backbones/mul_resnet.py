@@ -1,20 +1,18 @@
 import torch.nn as nn
-import torch
 from .resnet import ResNet
 from ..registry import BACKBONES
-from mmcv.cnn import kaiming_init
 
 """
 Author:Yuan Yuan 
 Date:2018/12/01
 Description: This file defines a ResNet to process multi-model(two) data.
              Standard ResNet will process each model respectively.Then,
-             the results from these standard ResNets will be concatenated.
+             the results from these standard ResNets will be returned.
 """
 
 
 @BACKBONES.register_module
-class MulCatResnet(nn.Module):
+class MulResnet(nn.Module):
 
     def __init__(self,
                  depth,
@@ -30,7 +28,7 @@ class MulCatResnet(nn.Module):
                  stage_with_dcn=(False, False, False, False),
                  with_cp=False,
                  zero_init_residual=True):
-        super(MulCatResnet, self).__init__()
+        super(MulResnet, self).__init__()
         # ResNet used for processing RGB images
         self.resnet_rgb = ResNet(
             depth=depth,
@@ -63,29 +61,12 @@ class MulCatResnet(nn.Module):
             with_cp=with_cp,
             zero_init_residual=zero_init_residual
         )
-        for i in out_indices:
-            conv_name = "conv{}".format(i)
-            self.add_module(conv_name, nn.Conv2d(int(512 * 2 ** i), int(256 * 2 ** i), 1))
-            kaiming_init(getattr(self, conv_name))
-            # relu_name = "relu{}".format(i)
-            # self.add_module(nn.ReLU)
-        self.out_indices = out_indices
 
     def forward(self, img_rgb, img_th):
         out_rgb = self.resnet_rgb(img_rgb)
         out_t = self.resnet_thermal(img_th)
         assert len(out_rgb) == len(out_t)
-        x = []
-        for i, (r, t) in enumerate(zip(out_rgb, out_t)):
-            temp = torch.cat([r, t], 1)
-            conv_name = "conv{}".format(self.out_indices[i])
-            conv_model = getattr(self, conv_name)
-            out = conv_model(temp)  # concatenate features from two sibling branches
-            # relu_name = "relu{}".format(i)
-            # relu_model = getattr(self,relu_name)
-            # out = relu_model(out)
-            x.append(out)
-        return tuple(x)
+        return out_rgb, out_t
 
     def init_weights(self, pretrained=None):
         self.resnet_rgb.init_weights(pretrained)

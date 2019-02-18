@@ -68,7 +68,7 @@ class MulAddResnet(nn.Module):
         assert len(out_rgb) == len(out_t)
         x = []
         for i, (r, t) in enumerate(zip(out_rgb, out_t)):
-            out = 0.5 * (r + t)  # element-wise add
+            out = (r + t)  # element-wise add
             x.append(out)
         return tuple(x)
 

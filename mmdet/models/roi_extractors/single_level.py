@@ -68,6 +68,7 @@ class SingleRoIExtractor(nn.Module):
             (rois[:, 3] - rois[:, 1] + 1) * (rois[:, 4] - rois[:, 2] + 1))
         target_lvls = torch.floor(torch.log2(scale / self.finest_scale + 1e-6))
         target_lvls = target_lvls.clamp(min=0, max=num_levels - 1).long()
+        # print('lenght of proposals:{}'.format(len(target_lvls)))
         return target_lvls
 
     def forward(self, feats, rois):

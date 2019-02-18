@@ -28,8 +28,7 @@ def parse_xml(args):
             int(float(bnd_box.find('xmax').text)),
             int(float(bnd_box.find('ymax').text))
         ]
-        if name != 'person' or difficult > 0 or occlusion > 0 or (bbox[3] - bbox[1] + 1) < 55:
-        # if name != 'person'  or (bbox[3] - bbox[1] + 1) < 50: # for caltech_new
+        if name != 'person' or difficult > 0 or occlusion > 0 or (bbox[3] - bbox[1] + 1) < 50:
             bboxes_ignore.append(bbox)
             labels_ignore.append(0)
         else:
@@ -37,7 +36,7 @@ def parse_xml(args):
             labels.append(1)
     if not bboxes:
         if flag == 'train':
-            return None  # the image without pedestrian can be ignored during training
+            return None  # images without pedestrian can be ignored during training
         else:
             bboxes = np.zeros((0, 4))
             labels = np.zeros((0,))
