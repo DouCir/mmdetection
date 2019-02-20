@@ -7,6 +7,7 @@ from mmdet.apis import (train_detector, get_root_logger)
 from mmdet.models import build_detector
 import os
 import os.path as osp
+import getpass
 
 """
 Author:Yuan Yuan
@@ -24,13 +25,15 @@ def main():
     # configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
     # configs = ['../../configs/caltech/rpn_r50_fpn_c5_caltech.py']
     # configs = ['../../configs/caltech/faster_rcnn_r50_fpn_caltech.py']
-    configs = ['../../configs/cvc09/faster_rcnn_r50_c4_cvc.py']
+    # configs = ['../../configs/caltech/faster_rcnn_v16_c5_caltech.py']
+    configs = ['../../configs/caltech/faster_rcnn_v16_fpn_caltech.py']
     # configs = ['../../configs/kaist/faster_rcnn_r50_concatenate_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_fpn_add_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_c4_mul_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_fpn_cat_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_element_wise_add_kaist.py']
+
 
     for config in configs:
         # load dataset
@@ -43,10 +46,11 @@ def main():
             cfg.checkpoint_config.meta = dict(
                 mmdet_version=__version__, config=cfg.text)
 
-        temp_file = osp.join('/media/ser606/Data/DoubleCircle/temp/temp.txt')
+        username = getpass.getuser()
+        temp_file = osp.join('/media/', username, 'Data/DoubleCircle/temp/temp.txt')
         fo = open(temp_file, 'w+')
         str_write = cfg.work_dir.replace('../..',
-                                         '/media/ser606/Data/DoubleCircle/project/mmdetection/mmdetection')
+                                         ('/media/'+username+'/Data/DoubleCircle/project/mmdetection/mmdetection'))
         fo.write(str_write)
         fo.close()
 

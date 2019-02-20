@@ -68,7 +68,11 @@ class SingleRoIExtractor(nn.Module):
             (rois[:, 3] - rois[:, 1] + 1) * (rois[:, 4] - rois[:, 2] + 1))
         target_lvls = torch.floor(torch.log2(scale / self.finest_scale + 1e-6))
         target_lvls = target_lvls.clamp(min=0, max=num_levels - 1).long()
-        # print('lenght of proposals:{}'.format(len(target_lvls)))
+        """
+        Yuan modified the parameter:min. I want to use the top-2 layers of FPN to
+        extract features of RoIs.
+        """
+        #target_lvls = target_lvls.clamp(min=num_levels-2, max=num_levels - 1).long()
         return target_lvls
 
     def forward(self, feats, rois):

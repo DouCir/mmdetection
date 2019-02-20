@@ -7,6 +7,7 @@ from .faster_rcnn import FasterRCNN
 from .mask_rcnn import MaskRCNN
 from .cascade_rcnn import CascadeRCNN
 from .retinanet import RetinaNet
+from .faster_rcnn_yuan import FasterRCNNYuan
 
 """
 Yuan add following lines.
@@ -21,5 +22,6 @@ __all__ = [
     'BaseDetector', 'SingleStageDetector', 'TwoStageDetector', 'RPN',
     'FastRCNN', 'FasterRCNN', 'MaskRCNN', 'CascadeRCNN', 'RetinaNet',
     'TwoStageDetectorMul', 'FasterRCNNMul', 'BaseDetectorMul',
-    'TwoStageDetectorFPNAdd', 'FasterRCNNMulFPNCat'
+    'TwoStageDetectorFPNAdd', 'FasterRCNNMulFPNCat',
+    'TwoStageDetectorMul', 'FasterRCNNMul', 'BaseDetectorMul', 'FasterRCNNYuan'
 ]

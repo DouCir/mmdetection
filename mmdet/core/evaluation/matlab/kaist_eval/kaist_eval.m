@@ -33,7 +33,7 @@ miss=exp(mean(log(max(1e-10,1-miss))));
 roc=[score fp tp];
 fprintf('\nlog-average miss rate = %.2f%%\n',miss*100);
 
-fid = fopen('/media/ser606/Data/DoubleCircle/temp/temp.txt','r');
+fid = fopen(['/media/',getenv('USER'),'/Data/DoubleCircle/temp/temp.txt'],'r');
 str = fgets(fid);
 fclose(fid);
 

@@ -250,7 +250,17 @@ for g=1:nGt %for each experiment
     if(plotRoc), ys{g,d}=1-ys{g,d}; score=1-score; end
     if(plotRoc), score=exp(mean(log(score))); else score=mean(score); end
     scores(g,d)=score;
-    fprintf('Avg. Miss Rate: %f\n',score);
+    fprintf('log-average miss rate: %.2f%%\n',score*100);
+
+    fid = fopen(['/media/',getenv('USER'),'/Data/DoubleCircle/temp/temp.txt'],'r');
+    str = fgets(fid);
+    fclose(fid);
+
+    str = [str,'/eval_result.txt'];
+    fid = fopen(str,'a+');
+    fprintf(fid,'log-average miss rate = %.2f%%\n',score*100);
+    fclose(fid);
+
   end
 end
 
