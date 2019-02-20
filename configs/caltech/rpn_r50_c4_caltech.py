@@ -1,7 +1,7 @@
 # model settings
 model = dict(
     type='RPN',
-    pretrained='/media/server606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
+    pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
     backbone=dict(
         type='ResNet',
         depth=50,
@@ -17,9 +17,9 @@ model = dict(
     rpn_head=dict(
         type='RPNHead',
         in_channels=1024,
-        feat_channels=512,
-        anchor_scales=[2.6, 3.38, 4.3940, 5.7122, 7.4259, 9.6536, 12.5497, 16.3146, 21.2090],
-        anchor_ratios=[1.0 / 0.41],
+        feat_channels=128,
+        anchor_scales=[4, 6, 8, 10, 12, 14],
+        anchor_ratios=[1.0 / 0.5, 1.0],
         anchor_strides=[16],
         target_means=[.0, .0, .0, .0],
         target_stds=[1.0, 1.0, 1.0, 1.0],
@@ -29,14 +29,14 @@ train_cfg = dict(
     rpn=dict(
         assigner=dict(
             type='MaxIoUAssigner',
-            pos_iou_thr=0.7,
+            pos_iou_thr=0.5,
             neg_iou_thr=0.3,
             min_pos_iou=0.3,
             ignore_iof_thr=-1),
         sampler=dict(
             type='RandomSampler',
             num=120,
-            pos_fraction=1.0 / 6,
+            pos_fraction=1.0 / 4,
             neg_pos_ub=-1,
             add_gt_as_proposals=False,
             pos_balance_sampling=False,
@@ -55,7 +55,7 @@ test_cfg = dict(
         min_bbox_size=0))
 # dataset settings
 dataset_type = 'CaltechDataset'
-data_root = '/media/server606/Data/DoubleCircle/datasets/Caltech/'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/Caltech/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 data = dict(
@@ -103,7 +103,7 @@ lr_config = dict(
     # warmup='linear',
     # warmup_iters=6000,
     # warmup_ratio=1.0 / 3,
-    step=[4])
+    step=[4, 8])
 checkpoint_config = dict(interval=1)
 # yapf:disable
 log_config = dict(

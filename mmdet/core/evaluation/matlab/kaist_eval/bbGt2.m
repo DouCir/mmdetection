@@ -546,10 +546,14 @@ for d=2:m, fs(d,:)=getFiles0(dirs{d},info,inputTypes{1},f0,f1); end
     if isempty(inputType), ext = '.txt'; else ext ='.jpg';    end
     
     fs0=info{3}(f0:min(f1,end));
-        
-    fs1=cellfun(@(x,y,z) fullfile(dir1, x, y, inputType, [z ext]), ...
-        info{1}(f0:min(f1,end)), info{2}(f0:min(f1,end)), info{3}(f0:min(f1,end)), 'uniformoutput', false );        
-  end
+    if isempty(info{3}{1})
+        fs1=cellfun(@(x,y) fullfile(dir1, x, [y ext]), ...
+            info{1}(f0:min(f1,end)), info{2}(f0:min(f1,end)), 'uniformoutput', false ); 
+    else
+        fs1=cellfun(@(x,y,z) fullfile(dir1, x, y, inputType, [z ext]), ...
+            info{1}(f0:min(f1,end)), info{2}(f0:min(f1,end)), info{3}(f0:min(f1,end)), 'uniformoutput', false );        
+    end
+end
 
 %   function fs1 = getFiles1( dir1, fs0, sep )
 %     % get fs1 in dir1 corresponding to fs0

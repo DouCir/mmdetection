@@ -18,3 +18,8 @@ def eval_caltech_mr():
 def eval_kaist_mr():
     eng = matlab.engine.start_matlab()
     eng.kaist_eval(nargout=0)
+
+def eval_cvc_mr():
+    eng = matlab.engine.start_matlab()
+    eng.cvc_eval(nargout=0)
+

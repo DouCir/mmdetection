@@ -1,29 +1,32 @@
 # model settings
 model = dict(
     type='FasterRCNN',
-    pretrained='/media/server606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
+    pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
     backbone=dict(
         type='ResNet',
         depth=50,
-        num_stages=4,
-        out_indices=(0, 1, 2, 3),
+        num_stages=3,
+        strides=(1, 2, 2),
+        dilations=(1, 1, 1),
+        out_indices=(0, 1, 2,),
+        stage_with_dcn=(False, False, False),
         frozen_stages=1,
         style='pytorch'
     ),
     neck=dict(
         type='FPN',
-        in_channels=[256, 512, 1024, 2048],
+        in_channels=[256, 512, 1024],
         out_channels=256,
-        out_indices=[0, 1, 2, 3],
-        num_outs=4),
+        out_indices=[0, 1, 2],
+        num_outs=3),
     rpn_head=dict(
         type='RPNHead',
         in_channels=256,
-        feat_channels=256,
+        feat_channels=128,
         anchor_scales=[8, 10, 12, 14],
         anchor_ratios=[1.0 / 0.5, 1.0],
-        anchor_strides=[4, 8, 16, 32],
-        anchor_base_sizes=[4, 8, 16, 32],
+        anchor_strides=[4, 8, 16],
+        anchor_base_sizes=[4, 8, 16],
         target_means=[.0, .0, .0, .0],
         target_stds=[1.0, 1.0, 1.0, 1.0],
         use_sigmoid_cls=True),
@@ -31,12 +34,12 @@ model = dict(
         type='SingleRoIExtractor',
         roi_layer=dict(type='RoIAlign', out_size=7, sample_num=-1),
         out_channels=256,
-        featmap_strides=[4, 8, 16, 32]),
+        featmap_strides=[4, 8, 16]),
     bbox_head=dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
         in_channels=256,
-        fc_out_channels=1024,
+        fc_out_channels=256,
         roi_feat_size=7,
         num_classes=2,  # background and pederstrian
         target_means=[0., 0., 0., 0.],
@@ -54,8 +57,8 @@ train_cfg = dict(
             ignore_iof_thr=-1),
         sampler=dict(
             type='RandomSampler',
-            num=256,
-            pos_fraction=0.5,
+            num=120,
+            pos_fraction=0.25,
             neg_pos_ub=-1,
             add_gt_as_proposals=False,
             pos_balance_sampling=False,
@@ -81,7 +84,7 @@ train_cfg = dict(
             ignore_iof_thr=-1),
         sampler=dict(
             type='RandomSampler',
-            num=200,
+            num=32,
             pos_fraction=0.5,
             neg_pos_ub=-1,
             add_gt_as_proposals=True
@@ -100,7 +103,7 @@ test_cfg = dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'CaltechDataset'
-data_root = '/media/server606/Data/DoubleCircle/datasets/Caltech/'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/Caltech/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 data = dict(
@@ -140,7 +143,7 @@ data = dict(
         with_label=False,
         test_mode=True))
 # optimizer
-optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
@@ -159,7 +162,7 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 40
+total_epochs = 20
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '../../work_dirs/faster_rcnn_r50_fpn_caltech_1x'

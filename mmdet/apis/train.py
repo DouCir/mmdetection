@@ -7,7 +7,8 @@ from mmcv.runner import Runner, DistSamplerSeedHook
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 
 from mmdet.core import (DistOptimizerHook, DistEvalmAPHook,
-                        CocoDistEvalRecallHook, CocoDistEvalmAPHook, DistEvalCaltechMR, DistEvalKaistMR)
+                        CocoDistEvalRecallHook, CocoDistEvalmAPHook, DistEvalCaltechMR, DistEvalKaistMR
+                        , DistEvalCvcMR)
 from mmdet.datasets import build_dataloader
 from mmdet.models import RPN
 from .env import get_root_logger
@@ -119,6 +120,8 @@ def _non_dist_train(model, dataset, cfg, validate=False):
             runner.register_hook(DistEvalCaltechMR(cfg.data.val))
         if 'Kaist' in cfg.data.val['type']:
             runner.register_hook(DistEvalKaistMR(cfg.data.val))
+        if 'Cvc' in cfg.data.val['type']:
+            runner.register_hook(DistEvalCvcMR(cfg.data.val))
     if cfg.resume_from:
         runner.resume(cfg.resume_from)
     elif cfg.load_from:

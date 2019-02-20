@@ -3,7 +3,7 @@ import mmcv
 from mmcv.runner import load_checkpoint, obj_from_dict
 from mmcv.parallel import scatter, collate, MMDataParallel
 from mmdet import datasets
-from mmdet.core import eval_kaist_mr,eval_caltech_mr
+from mmdet.core import eval_kaist_mr, eval_caltech_mr, eval_cvc_mr
 from mmdet.datasets import build_dataloader
 from mmdet.models import build_detector
 import os.path as osp
@@ -61,7 +61,7 @@ def _data_func(data, device_id):
 
 def main():
     # configs = ['../../configs/caltech/rpn_v16_fpn_caltech.py']
-    configs = ['../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py']
+    configs = ['../../configs/cvc09/faster_rcnn_r50_c4_cvc.py']
     for config in configs:
         # load dataset
         cfg = mmcv.Config.fromfile(config)
@@ -95,6 +95,8 @@ def main():
             eval_caltech_mr()
         if 'kaist' in config:
             eval_kaist_mr()
+        if 'cvc' in config:
+            eval_cvc_mr()
 
 
 if __name__ == '__main__':

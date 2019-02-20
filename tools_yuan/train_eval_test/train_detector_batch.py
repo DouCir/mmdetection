@@ -24,12 +24,13 @@ def main():
     # configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
     # configs = ['../../configs/caltech/rpn_r50_fpn_c5_caltech.py']
     # configs = ['../../configs/caltech/faster_rcnn_r50_fpn_caltech.py']
-    configs = ['../../configs/kaist/faster_rcnn_r50_concatenate_kaist.py',
-               '../../configs/kaist/faster_rcnn_r50_fpn_add_kaist.py',
-               '../../configs/kaist/faster_rcnn_r50_c4_mul_kaist.py',
-               '../../configs/kaist/faster_rcnn_r50_fpn_cat_kaist.py',
-               '../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py',
-               '../../configs/kaist/faster_rcnn_r50_element_wise_add_kaist.py']
+    configs = ['../../configs/cvc09/faster_rcnn_r50_c4_cvc.py']
+    # configs = ['../../configs/kaist/faster_rcnn_r50_concatenate_kaist.py',
+    #            '../../configs/kaist/faster_rcnn_r50_fpn_add_kaist.py',
+    #            '../../configs/kaist/faster_rcnn_r50_c4_mul_kaist.py',
+    #            '../../configs/kaist/faster_rcnn_r50_fpn_cat_kaist.py',
+    #            '../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py',
+    #            '../../configs/kaist/faster_rcnn_r50_element_wise_add_kaist.py']
 
     for config in configs:
         # load dataset
@@ -44,7 +45,7 @@ def main():
 
         temp_file = osp.join('/media/ser606/Data/DoubleCircle/temp/temp.txt')
         fo = open(temp_file, 'w+')
-        str_write = cfg.work_dir.replace('../../',
+        str_write = cfg.work_dir.replace('../..',
                                          '/media/ser606/Data/DoubleCircle/project/mmdetection/mmdetection')
         fo.write(str_write)
         fo.close()

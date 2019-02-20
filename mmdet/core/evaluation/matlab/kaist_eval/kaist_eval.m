@@ -37,6 +37,7 @@ fid = fopen('/media/ser606/Data/DoubleCircle/temp/temp.txt','r');
 str = fgets(fid);
 fclose(fid);
 
+str = [str,'/eval_result.txt'];
 fid = fopen(str,'a+');
 fprintf(fid,'log-average miss rate = %.2f%%\n',miss*100);
 fclose(fid);

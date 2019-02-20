@@ -14,7 +14,7 @@ from torch.utils.data import Dataset
 from .coco_utils import results2json, fast_eval_recall
 from .mean_ap import eval_map
 from mmdet import datasets
-from .eval_miss_rate import eval_caltech_mr, eval_kaist_mr
+from .eval_miss_rate import eval_caltech_mr, eval_kaist_mr, eval_cvc_mr
 
 
 class DistEvalHook(Hook):
@@ -153,6 +153,11 @@ class DistEvalCaltechMR(DistEvalHook):
 class DistEvalKaistMR(DistEvalHook):
     def evaluate(self, runner, results):
         eval_kaist_mr()
+
+
+class DistEvalCvcMR(DistEvalHook):
+    def evaluate(self, ruuner, results):
+        eval_cvc_mr()
 
 
 class DistEvalmAPHook(DistEvalHook):
