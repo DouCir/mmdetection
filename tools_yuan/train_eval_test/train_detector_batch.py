@@ -25,8 +25,13 @@ def main():
     # configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
     # configs = ['../../configs/caltech/rpn_r50_fpn_c5_caltech.py']
     # configs = ['../../configs/caltech/faster_rcnn_r50_fpn_caltech.py']
+    configs = \
+        [
+               '../../configs/caltech/faster_rcnn_r50_fpn_caltech.py',
+               '../../configs/caltech/faster_rcnn_r50_c4_caltech.py'
+        ]
     # configs = ['../../configs/caltech/faster_rcnn_v16_c5_caltech.py']
-    configs = ['../../configs/caltech/faster_rcnn_v16_fpn_caltech.py']
+    # configs = ['../../configs/caltech/faster_rcnn_v16_fpn_caltech.py']
     # configs = ['../../configs/kaist/faster_rcnn_r50_concatenate_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_fpn_add_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_c4_mul_kaist.py',
@@ -47,7 +52,7 @@ def main():
                 mmdet_version=__version__, config=cfg.text)
 
         username = getpass.getuser()
-        temp_file = osp.join('/media/', username, 'Data/DoubleCircle/temp/temp.txt')
+        temp_file = '/media/' + username + '/Data/DoubleCircle/temp/temp.txt'
         fo = open(temp_file, 'w+')
         str_write = cfg.work_dir.replace('../..',
                                          ('/media/'+username+'/Data/DoubleCircle/project/mmdetection/mmdetection'))

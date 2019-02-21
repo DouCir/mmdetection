@@ -1,22 +1,22 @@
 # model settings
 model = dict(
     type='FasterRCNN',
-    pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
+    pretrained='/media/server606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
     backbone=dict(
         type='ResNet',
         depth=50,
-        num_stages=3,
-        strides=(1, 2, 2),
-        dilations=(1, 1, 1),
-        out_indices=(2,),
-        stage_with_dcn=(False, False, False),
+        num_stages=4,
+        strides=(1, 2, 2, 1),
+        dilations=(1, 1, 1, 1),
+        out_indices=(3, ),
+        stage_with_dcn=(False, False, False, False),
         frozen_stages=1,
         style='pytorch'
     ),
     neck=None,
     rpn_head=dict(
         type='RPNHead',
-        in_channels=1024,
+        in_channels=2048,
         feat_channels=128,
         anchor_scales=[4, 6, 8, 10, 12, 14],
         anchor_ratios=[1.0 / 0.5, 1.0],
@@ -32,7 +32,7 @@ model = dict(
     bbox_head=dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
-        in_channels=1024,
+        in_channels=2048,
         fc_out_channels=256,
         roi_feat_size=7,
         num_classes=2,  # background and pederstrian
@@ -96,7 +96,7 @@ test_cfg = dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'CaltechDataset'
-data_root = '/media/ser606/Data/DoubleCircle/datasets/Caltech/'
+data_root = '/media/server606/Data/DoubleCircle/datasets/Caltech/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 data = dict(
@@ -155,7 +155,7 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 40
+total_epochs = 25
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '../../work_dirs/faster_rcnn_r50_c4_caltech'
