@@ -25,11 +25,11 @@ def main():
     # configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
     # configs = ['../../configs/caltech/rpn_r50_fpn_c5_caltech.py']
     # configs = ['../../configs/caltech/faster_rcnn_r50_fpn_caltech.py']
-    configs = \
-        [
-               '../../configs/caltech/faster_rcnn_r50_fpn_caltech.py',
-               '../../configs/caltech/faster_rcnn_r50_c4_caltech.py'
-        ]
+    # configs = \
+    #     [
+    #            '../../configs/caltech/faster_rcnn_r50_fpn_caltech.py',
+    #            '../../configs/caltech/faster_rcnn_r50_c4_caltech.py'
+    #     ]
     # configs = ['../../configs/caltech/faster_rcnn_v16_c5_caltech.py']
     # configs = ['../../configs/caltech/faster_rcnn_v16_fpn_caltech.py']
     # configs = ['../../configs/kaist/faster_rcnn_r50_concatenate_kaist.py',
@@ -39,6 +39,11 @@ def main():
     #            '../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_element_wise_add_kaist.py']
 
+    configs = \
+        [
+            '../../configs/cvc09/faster_rcnn_v16_c5_cvc.py',
+            '../../configs/cvc09/faster_rcnn_r50_c4_cvc.py',
+        ]
 
     for config in configs:
         # load dataset
@@ -55,7 +60,7 @@ def main():
         temp_file = '/media/' + username + '/Data/DoubleCircle/temp/temp.txt'
         fo = open(temp_file, 'w+')
         str_write = cfg.work_dir.replace('../..',
-                                         ('/media/'+username+'/Data/DoubleCircle/project/mmdetection/mmdetection'))
+                                         ('/media/' + username + '/Data/DoubleCircle/project/mmdetection/mmdetection'))
         fo.write(str_write)
         fo.close()
 

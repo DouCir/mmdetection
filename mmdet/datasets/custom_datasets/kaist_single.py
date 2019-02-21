@@ -77,7 +77,7 @@ class KaistThermalDataset(CustomDataset):
         flip = True if np.random.rand() < self.flip_ratio else False
         img_scale = random_scale(self.img_scales)  # sample a scale
         # for thermal images
-        img_t, img_shape, pad_shape, scale_factor = self.img_transform_t(
+        img_t, img_shape, pad_shape, scale_factor = self.img_transform(
             img_t, img_scale, flip)
         if self.proposals is not None:
             proposals = self.bbox_transform(proposals, img_shape, scale_factor,
@@ -132,7 +132,7 @@ class KaistThermalDataset(CustomDataset):
             proposal = None
 
         def prepare_single(img_t, scale, flip, proposal=None):
-            _img_t, img_shape, pad_shape, scale_factor = self.img_transform_t(
+            _img_t, img_shape, pad_shape, scale_factor = self.img_transform(
                 img_t, scale, flip)
             _img_t = to_tensor(_img_t)
             _img_meta = dict(

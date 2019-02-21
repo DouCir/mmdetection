@@ -1,63 +1,33 @@
 from ..custom import CustomDataset
 import os.path as osp
-
-import mmcv
 import numpy as np
 from mmcv.parallel import DataContainer as DC
-from ..utils import to_tensor, random_scale, to_tensor, random_scale
-from ..transforms import (ImageTransform, BboxTransform, MaskTransform,
-                          Numpy2Tensor)
+from ..utils import to_tensor, random_scale
 import cv2
+"""
+Author: Yuan Yuan
+Date: 2019/02/21
+Description: This file defines a dataset which is used for pre-fineturing the Thermal branch.
+             Data from CVC-09 theraml dataset and R channel of Caltech dataset.
+"""
 
-
-class KaistDataset(CustomDataset):
-    def __init__(self,
-                 ann_file,
-                 img_prefix,
-                 img_scale,
-                 img_norm_cfg,
-                 img_norm_cfg_t,
-                 size_divisor=None,
-                 proposal_file=None,
-                 num_max_proposals=1000,
-                 flip_ratio=0,
-                 with_mask=False,
-                 with_crowd=True,
-                 with_label=True,
-                 test_mode=False):
-        self.img_norm_cfg_t = img_norm_cfg_t
-        # transforms
-        self.img_transform_t = ImageTransform(
-            size_divisor=size_divisor, **self.img_norm_cfg_t)
-        super(KaistDataset, self).__init__(
-            ann_file=ann_file,
-            img_prefix=img_prefix,
-            img_scale=img_scale,
-            img_norm_cfg=img_norm_cfg,
-            size_divisor=size_divisor,
-            proposal_file=proposal_file,
-            num_max_proposals=num_max_proposals,
-            flip_ratio=flip_ratio,
-            with_mask=with_mask,
-            with_crowd=with_crowd,
-            with_label=with_label,
-            test_mode=test_mode)
+# dataset contains cvc-09 and the R channel of caltech
+class CvcCaltechDataset(CustomDataset):
 
     def prepare_train_img(self, idx):
         img_info = self.img_infos[idx]
-        # load image(rgb)
-        img_temp = mmcv.imread(osp.join(self.img_prefix, img_info['filename']))
-        if img_temp.shape[2] == 1:
-            img = np.zeros((img_temp.shape[0], img_temp.shape[1], 3))
-            img[:, :, 0] = img_temp
-            img[:, :, 1] = img_temp
-            img[:, :, 2] = img_temp
-        else:
-            img = img_temp
         # load image(thermal)
         img_t_path = osp.join(self.img_prefix, img_info['filename']).replace('visible', 'lwir')
-        img_t = cv2.imread(img_t_path)  # three channels,??? img_t[:,:,0]==img_t[:,:,2]!= img_t[:,:,1]
-        img_t[:, :, 1] = img_t[:, :, 0]
+        img_temp = cv2.imread(img_t_path)
+        img_t = np.zeros((img_temp.shape[0], img_temp.shape[1], 3))
+        if img_temp.shape[2] == 1:  # if the input image has only one channel,duplicate three times
+            img_t[:, :, 0] = img_temp
+            img_t[:, :, 1] = img_temp
+            img_t[:, :, 2] = img_temp
+        elif img_temp.shape[2] == 3:
+            img_t[:, :, 0] = img_temp[:, :, 2]  # if the image has three channels, duplicate the R channel three times
+            img_t[:, :, 1] = img_temp[:, :, 2]
+            img_t[:, :, 2] = img_temp[:, :, 2]  # opencv : output BGR order
         # load proposals if necessary
         if self.proposals is not None:
             proposals = self.proposals[idx][:self.num_max_proposals]
@@ -89,11 +59,8 @@ class KaistDataset(CustomDataset):
         # apply transforms
         flip = True if np.random.rand() < self.flip_ratio else False
         img_scale = random_scale(self.img_scales)  # sample a scale
-        # for rgb images
-        img, img_shape, pad_shape, scale_factor = self.img_transform(
-            img, img_scale, flip)
         # for thermal images
-        img_t, img_shape_t, pad_shape_t, scale_factor_t = self.img_transform_t(
+        img_t, img_shape, pad_shape, scale_factor = self.img_transform(
             img_t, img_scale, flip)
         if self.proposals is not None:
             proposals = self.bbox_transform(proposals, img_shape, scale_factor,
@@ -117,8 +84,7 @@ class KaistDataset(CustomDataset):
             scale_factor=scale_factor,
             flip=flip)
         data = dict(
-            img=DC(to_tensor(img), stack=True),
-            img_t=DC(to_tensor(img_t), stack=True),
+            img=DC(to_tensor(img_t), stack=True),
             img_meta=DC(img_meta, cpu_only=True),
             gt_bboxes=DC(to_tensor(gt_bboxes)))
 
@@ -135,18 +101,19 @@ class KaistDataset(CustomDataset):
     def prepare_test_img(self, idx):
         """Prepare an image for testing (multi-scale and flipping)"""
         img_info = self.img_infos[idx]
-        img_temp = mmcv.imread(osp.join(self.img_prefix, img_info['filename']))
-        if img_temp.shape[2] == 1:
-            img = np.zeros(img_temp.shape(0), img_temp.shape(1), 3)
-            img[:, :, 0] = img_temp
-            img[:, :, 1] = img_temp
-            img[:, :, 2] = img_temp
-        else:
-            img = img_temp
         # load image(thermal)
         img_t_path = osp.join(self.img_prefix, img_info['filename']).replace('visible', 'lwir')
-        img_t = cv2.imread(img_t_path)
-        img_t[:, :, 1] = img_t[:, :, 0]
+        img_temp = cv2.imread(img_t_path)
+        img_t = np.zeros(img_temp.shape(0), img_temp.shape(1), 3)
+        if img_temp.shape[2] == 1:  # if the input image has only one channel,duplicate three times
+            img_t[:, :, 0] = img_temp
+            img_t[:, :, 1] = img_temp
+            img_t[:, :, 2] = img_temp
+        elif img_temp.shape[2] == 3:
+            img_t[:, :, 0] = img_temp[:, :, 2]  # if the image has three channels, duplicate the R channel three times
+            img_t[:, :, 1] = img_temp[:, :, 2]
+            img_t[:, :, 2] = img_temp[:, :, 2]  # opencv : output BGR order
+
         if self.proposals is not None:
             proposal = self.proposals[idx][:self.num_max_proposals]
             if not (proposal.shape[1] == 4 or proposal.shape[1] == 5):
@@ -156,12 +123,9 @@ class KaistDataset(CustomDataset):
         else:
             proposal = None
 
-        def prepare_single(img, img_t, scale, flip, proposal=None):
-            _img, img_shape, pad_shape, scale_factor = self.img_transform(
-                img, scale, flip)
-            _img_t, img_shape, pad_shape, scale_factor = self.img_transform_t(
+        def prepare_single(img_t, scale, flip, proposal=None):
+            _img_t, img_shape, pad_shape, scale_factor = self.img_transform(
                 img_t, scale, flip)
-            _img = to_tensor(_img)
             _img_t = to_tensor(_img_t)
             _img_meta = dict(
                 ori_shape=(img_info['height'], img_info['width'], 3),
@@ -182,27 +146,23 @@ class KaistDataset(CustomDataset):
                 _proposal = to_tensor(_proposal)
             else:
                 _proposal = None
-            return _img, _img_t, _img_meta, _proposal
+            return _img_t, _img_meta, _proposal
 
-        imgs = []
         imgs_t = []
         img_metas = []
         proposals = []
         for scale in self.img_scales:
-            _img, _img_t, _img_meta, _proposal = prepare_single(
-                img, img_t, scale, False, proposal)
-            imgs.append(_img)
+            _img_t, _img_meta, _proposal = prepare_single(
+                img_t, scale, False, proposal)
             imgs_t.append(_img_t)
             img_metas.append(DC(_img_meta, cpu_only=True))
             proposals.append(_proposal)
             if self.flip_ratio > 0:
-                _img, _img_t, _img_meta, _proposal = prepare_single(
-                    img, img_t, scale, True, proposal)
-                imgs.append(_img)
+                _img, _img_t, _img_meta, _proposal = prepare_single(img_t, scale, True, proposal)
                 imgs_t.append(_img_t)
                 img_metas.append(DC(_img_meta, cpu_only=True))
                 proposals.append(_proposal)
-        data = dict(img=imgs, img_t=imgs_t, img_meta=img_metas)
+        data = dict(img=imgs_t, img_meta=img_metas)
         if self.proposals is not None:
             data['proposals'] = proposals
         return data

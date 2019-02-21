@@ -23,7 +23,7 @@ def main():
     train_filelist = osp.join(txt_dir, 'train-all.txt')
     img_all_names = mmcv.list_from_file(train_filelist)
     xml_all_paths = [osp.join(xml_dir, '{}.xml'.format(img_name)) for img_name in img_all_names]
-    img_all_paths = [osp.join(img_dir, '{}.jpg'.format(img_name)) for img_name in img_all_names]
+    img_all_paths = [osp.join(img_dir, '{}.png'.format(img_name)) for img_name in img_all_names]
     flags = ['train' for _ in img_all_names]
     train_annotations = track_progress_yuan(parse_xml,
                                                  list(zip(xml_all_paths, img_all_paths, flags)))
@@ -33,7 +33,7 @@ def main():
     test_filelist = osp.join(txt_dir, 'test-all.txt')
     img_all_names = mmcv.list_from_file(test_filelist)
     xml_all_paths = [osp.join(xml_dir, '{}.xml'.format(img_name)) for img_name in img_all_names]
-    img_all_paths = [osp.join(img_dir, '{}.jpg'.format(img_name)) for img_name in img_all_names]
+    img_all_paths = [osp.join(img_dir, '{}.png'.format(img_name)) for img_name in img_all_names]
     flags = ['test' for _ in img_all_names]
     test_annotations = track_progress_yuan(parse_xml,
                                                 list(zip(xml_all_paths, img_all_paths, flags)))
