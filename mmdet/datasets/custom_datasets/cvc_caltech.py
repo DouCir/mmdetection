@@ -12,7 +12,7 @@ Description: This file defines a dataset which is used for pre-fineturing the Th
 """
 
 # dataset contains cvc-09 and the R channel of caltech
-class CvcCaltechDataset(CustomDataset):
+class ExtendedCvcDataset(CustomDataset):
 
     def prepare_train_img(self, idx):
         img_info = self.img_infos[idx]
@@ -104,7 +104,7 @@ class CvcCaltechDataset(CustomDataset):
         # load image(thermal)
         img_t_path = osp.join(self.img_prefix, img_info['filename']).replace('visible', 'lwir')
         img_temp = cv2.imread(img_t_path)
-        img_t = np.zeros(img_temp.shape(0), img_temp.shape(1), 3)
+        img_t = np.zeros((img_temp.shape[0], img_temp.shape[1], 3))
         if img_temp.shape[2] == 1:  # if the input image has only one channel,duplicate three times
             img_t[:, :, 0] = img_temp
             img_t[:, :, 1] = img_temp

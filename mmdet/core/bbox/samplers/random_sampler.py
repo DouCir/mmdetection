@@ -48,6 +48,7 @@ class RandomSampler(BaseSampler):
         neg_inds = torch.nonzero(assign_result.gt_inds == 0)
         if neg_inds.numel() != 0:
             neg_inds = neg_inds.squeeze(1)
+        # print('RandomSampler: the number of negative:', neg_inds.numel())
         if len(neg_inds) <= num_expected:
             return neg_inds
         else:

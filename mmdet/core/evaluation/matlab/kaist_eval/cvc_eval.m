@@ -4,7 +4,7 @@
 %                     Used for evaluating average miss rate in pedestrian
 %                     detection.This script depends on 'bbGt2.m' and
 %                     Piotr's Computer Vision Matlab Toolbox,Version 3.26.
-
+fprintf('\ncvc dataset evaluating...\n');
 %% parameters setting
 pLoad={'lbls',{'person'},'ilbls',{'people','person?','cyclist'},'squarify',{3,.41}};  % for traing and test (common)
 pLoad = [pLoad, 'hRng',[50 inf], 'vType',{{'none'}},'xRng',[5 635],'yRng',[5 475]];  % for testing config
@@ -21,12 +21,15 @@ subset =[dataDir,'/imageSets/test-all.txt'];
 
 %% evaluating detection results
 [gt,dt]=bbGt2('loadAll',gtDir,dtDir,pLoad,subset);
+max_score_list = [];
 for ii=1:length(dt)
     if ~isempty(dt{ii})
         dt{ii}(:,3) = dt{ii}(:,3) - dt{ii}(:,1) + 1;
         dt{ii}(:,4) = dt{ii}(:,4) - dt{ii}(:,2) + 1;
+        max_score_list = [max_score_list,max(dt{ii}(:,5))];
     end
 end
+max_score = max(max_score_list);
 [gt,dt] = bbGt2('evalRes',gt,dt,thr,mul);
 [fp,tp,score,miss] = bbGt2('compRoc',gt,dt,1,ref);
 miss=exp(mean(log(max(1e-10,1-miss))));

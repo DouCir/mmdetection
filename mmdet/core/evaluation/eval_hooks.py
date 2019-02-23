@@ -88,9 +88,10 @@ class DistEvalHook(Hook):
             # image path
             img_path = self.dataset.img_infos[idx]['filename']
             res_path = img_path.replace('images', 'res')
-            res_path = res_path.replace('.jpg', '.txt')
             if 'visible' in res_path:
                 res_path = res_path.replace('/visible/', '/')
+            res_path = res_path.replace('.jpg', '.txt')
+            res_path = res_path.replace('.png', '.txt')
             if os.path.exists(res_path):
                 os.remove(res_path)
             os.mknod(res_path)

@@ -49,30 +49,16 @@ def main():
                                             list(zip(xml_all_paths, img_all_paths, flags)))
     mmcv.dump(train_annotations, osp.join(pkl_dir, 'train-all.pkl'))
 
-    # caltech dataset(testing)
-    # all test images
-    test_filelist = osp.join(txt_dir_caltech, 'test-all.txt')
-    img_test_names = mmcv.list_from_file(test_filelist)
-    xml_test_paths_caltech = [osp.join(xml_dir_caltech, img_name.replace('.txt', '.xml')) for img_name in
-                              img_test_names]
-    img_test_paths_caltech = [osp.join(img_dir_caltech, img_name.replace('.txt', '.jpg')) for img_name in
-                              img_test_names]
-    flags_caltech = ['test' for _ in img_test_names]
-
     # cvc dataset(testing)
     # all test images
     test_filelist = osp.join(txt_dir_cvc, 'test-all.txt')
     img_test_names = mmcv.list_from_file(test_filelist)
-    xml_test_paths_cvc = [osp.join(xml_dir_cvc, '{}.xml'.format(img_name)) for img_name in img_all_names]
-    img_test_paths_cvc = [osp.join(img_dir_cvc, '{}.png'.format(img_name)) for img_name in img_all_names]
+    xml_test_paths_cvc = [osp.join(xml_dir_cvc, '{}.xml'.format(img_name)) for img_name in img_test_names]
+    img_test_paths_cvc = [osp.join(img_dir_cvc, '{}.png'.format(img_name)) for img_name in img_test_names]
     flags_cvc = ['test' for _ in img_test_names]
 
-    xml_test_paths = xml_test_paths_caltech + xml_test_paths_cvc
-    img_test_paths = img_test_paths_caltech + img_test_paths_cvc
-    flags = flags_cvc + flags_caltech
-
     test_annotations = track_progress_yuan(parse_xml,
-                                           list(zip(xml_test_paths, img_test_paths, flags)))
+                                           list(zip(xml_test_paths_cvc, img_test_paths_cvc, flags_cvc)))
     mmcv.dump(test_annotations, osp.join(pkl_dir, 'test-all.pkl'))
 
 

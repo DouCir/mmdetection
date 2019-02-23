@@ -42,7 +42,7 @@ def main():
     configs = \
         [
             '../../configs/cvc09/faster_rcnn_v16_c5_cvc.py',
-            '../../configs/cvc09/faster_rcnn_r50_c4_cvc.py',
+            # '../../configs/cvc09/faster_rcnn_r50_c4_cvc.py',
         ]
 
     for config in configs:

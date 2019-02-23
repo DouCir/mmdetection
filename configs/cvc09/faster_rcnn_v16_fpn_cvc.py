@@ -6,31 +6,37 @@ model = dict(
         type='VGG',
         depth=16,
         num_stages=5,
-        out_indices=(4,),
+        out_indices=(1, 2, 3, 4),
         frozen_stages=1,
-        with_last_pool=False
+        with_last_pool=True
     ),
-    neck=None,
+    neck=dict(
+        type='FPN',
+        in_channels=[128, 256, 512, 512],
+        out_channels=128,
+        out_indices=[0, 1, 2, 3],
+        num_outs=4),
     rpn_head=dict(
         type='RPNHead',
-        in_channels=512,
-        feat_channels=256,
-        anchor_scales=[4, 6, 8, 10, 12, 14],
+        in_channels=128,
+        feat_channels=128,
+        anchor_scales=[8, 10, 12, 14],
         anchor_ratios=[1.0 / 0.5, 1.0],
-        anchor_strides=[16],
+        anchor_strides=[4, 8, 16, 32],
+        anchor_base_sizes=[4, 8, 16, 32],
         target_means=[.0, .0, .0, .0],
         target_stds=[1.0, 1.0, 1.0, 1.0],
         use_sigmoid_cls=True),
     bbox_roi_extractor=dict(
         type='SingleRoIExtractor',
         roi_layer=dict(type='RoIAlign', out_size=7, sample_num=-1),
-        out_channels=512,
-        featmap_strides=[16]),
+        out_channels=128,
+        featmap_strides=[4, 8, 16, 32]),
     bbox_head=dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
-        in_channels=512,
-        fc_out_channels=512,
+        in_channels=128,
+        fc_out_channels=256,
         roi_feat_size=7,
         num_classes=2,  # background and pederstrian
         target_means=[0., 0., 0., 0.],
@@ -93,7 +99,7 @@ test_cfg = dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'ExtendedCvcDataset'
-data_root = '/media/ser606/Data/DoubleCircle/datasets/CVC/'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/CVC-CaltechR/'
 img_norm_cfg = dict(
     mean=[123.675, 123.675, 123.675], std=[58.395, 58.395, 58.395], to_rgb=False)
 data = dict(
@@ -145,7 +151,7 @@ lr_config = dict(
 checkpoint_config = dict(interval=1)
 # yapf:disable
 log_config = dict(
-    interval=1000,
+    interval=500,
     hooks=[
         dict(type='TextLoggerHook'),
         # dict(type='TensorboardLoggerHook')
@@ -155,7 +161,7 @@ log_config = dict(
 total_epochs = 25
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../../work_dirs/faster_rcnn_r50_c4_cvc'
+work_dir = '../../work_dirs/faster_rcnn_r50_fpn_cvc'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

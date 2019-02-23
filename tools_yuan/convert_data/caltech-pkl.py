@@ -35,7 +35,7 @@ def main():
     img_test_names = mmcv.list_from_file(test_filelist)
     xml_test_paths = [osp.join(xml_dir, img_name.replace('.txt', '.xml')) for img_name in img_test_names]
     img_test_paths = [osp.join(img_dir, img_name.replace('.txt', '.jpg')) for img_name in img_test_names]
-    flags = ['test' for _ in test_filelist]
+    flags = ['test' for _ in img_test_paths]
     test_annotations = track_progress_yuan(parse_xml,
                                            list(zip(xml_test_paths, img_test_paths, flags)))
     mmcv.dump(test_annotations, osp.join(pkl_dir, 'test-all.pkl'))

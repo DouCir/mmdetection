@@ -137,7 +137,7 @@ class KaistDataset(CustomDataset):
         img_info = self.img_infos[idx]
         img_temp = mmcv.imread(osp.join(self.img_prefix, img_info['filename']))
         if img_temp.shape[2] == 1:
-            img = np.zeros(img_temp.shape(0), img_temp.shape(1), 3)
+            img = np.zeros((img_temp.shape[0], img_temp.shape[0], ))
             img[:, :, 0] = img_temp
             img[:, :, 1] = img_temp
             img[:, :, 2] = img_temp

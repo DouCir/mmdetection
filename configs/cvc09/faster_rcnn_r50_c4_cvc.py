@@ -33,7 +33,7 @@ model = dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
         in_channels=2048,
-        fc_out_channels=256,
+        fc_out_channels=1024,
         roi_feat_size=7,
         num_classes=2,  # background and pederstrian
         target_means=[0., 0., 0., 0.],
@@ -77,8 +77,8 @@ train_cfg = dict(
             ignore_iof_thr=-1),
         sampler=dict(
             type='RandomSampler',
-            num=32,
-            pos_fraction=0.5,
+            num=64,
+            pos_fraction=0.25,
             neg_pos_ub=-1,
             add_gt_as_proposals=True
         ),
@@ -95,8 +95,8 @@ test_cfg = dict(
     rcnn=dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
-dataset_type = 'CvcCaltechDataset'
-data_root = '/media/ser606/Data/DoubleCircle/datasets/CVC-CaltechR/'
+dataset_type = 'ExtendedCvcDataset'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/CVC/'
 img_norm_cfg = dict(
     mean=[123.675, 123.675, 123.675], std=[58.395, 58.395, 58.395], to_rgb=False)
 data = dict(
