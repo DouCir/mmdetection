@@ -38,7 +38,10 @@ class TwoStageDetectorFPNCat(TwoStageDetectorMul):
         """
         for i in range(4):
             conv_name = "conv{}".format(i)
-            self.add_module(conv_name, nn.Conv2d(512, 256, 1))
+            if backbone.type=='MulResnet':
+                self.add_module(conv_name, nn.Conv2d(512, 256, 1))
+            elif backbone.type=='MulVGG':
+                self.add_module(conv_name, nn.Conv2d(256, 128, 1))
             kaiming_init(getattr(self, conv_name))
             # relu_name = "relu{}".format(i)
             # self.add_module(relu_name, nn.ReLU())

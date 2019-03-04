@@ -25,24 +25,32 @@ def main():
     # configs = ['../../configs/caltech/rpn_v16_c5_caltech.py']
     # configs = ['../../configs/caltech/rpn_r50_fpn_c5_caltech.py']
     # configs = ['../../configs/caltech/faster_rcnn_r50_fpn_caltech.py']
-    configs = \
-        [
-               # '../../configs/caltech/faster_rcnn_r50_fpn_caltech.py',
-               # '../../configs/caltech/faster_rcnn_r50_c4_caltech.py'
-            # '../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py',
-            # '../../configs/kaist/faster_rcnn_r50_fpn_rgb_kaist.py',
-            # '../../configs/kaist/faster_rcnn_r50_c4_thermal_kaist.py',
-            '../../configs/kaist/faster_rcnn_r50_fpn_thermal_kaist.py',
-
-        ]
+    # configs = \
+    #     [
+    #            '../../configs/caltech/faster_rcnn_r50_fpn_caltech.py',
+    #            '../../configs/caltech/faster_rcnn_r50_c4_caltech.py'
+    #     ]
     # configs = ['../../configs/caltech/faster_rcnn_v16_c5_caltech.py']
     # configs = ['../../configs/caltech/faster_rcnn_v16_fpn_caltech.py']
     # configs = ['../../configs/kaist/faster_rcnn_r50_concatenate_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_fpn_add_kaist.py',
-    #            '../../configs/kaist/faster_rcnn_r50_c4_mul_kaist.py',
-    #            '../../configs/kaist/faster_rcnn_r50_fpn_cat_kaist.py',
+    #            '../../configs/kaist/mul_faster_rcnn_r50_c4_cat_kaist.py',
+    #            '../../configs/kaist/mul_faster_rcnn_r50_fpn_cat_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py',
     #            '../../configs/kaist/faster_rcnn_r50_element_wise_add_kaist.py']
+
+    configs = \
+        [
+            # '../../configs/cvc09/faster_rcnn_r50_c4_cvc.py',
+            # '../../configs/cvc09/faster_rcnn_r50_fpn_cvc.py',
+            # '../../configs/cvc09/faster_rcnn_v16_c5_cvc.py'
+            # '../../configs/cvc09/faster_rcnn_v16_fpn_cvc.py',
+            # '../../configs/kaist/mul_faster_rcnn_r50_c4_cat_kaist.py',
+            # '../../configs/kaist/mul_faster_rcnn_r50_fpn_cat_kaist.py',
+            '../../configs/kaist/mul_faster_rcnn_v16_c5_cat_kaist.py',
+            '../../configs/kaist/mul_faster_rcnn_v16_fpn_cat_kaist.py'
+
+        ]
 
 
     for config in configs:
@@ -60,7 +68,7 @@ def main():
         temp_file = '/media/' + username + '/Data/DoubleCircle/temp/temp.txt'
         fo = open(temp_file, 'w+')
         str_write = cfg.work_dir.replace('../..',
-                                         ('/media/'+username+'/Data/DoubleCircle/project/mmdetection/mmdetection'))
+                                         ('/media/' + username + '/Data/DoubleCircle/project/mmdetection/mmdetection'))
         fo.write(str_write)
         fo.close()
 

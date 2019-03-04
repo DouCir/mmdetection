@@ -3,24 +3,24 @@ model = dict(
     type='FasterRCNNMulFPNCat',
     pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
     backbone=dict(
-        type='MulResnet',
-        depth=50,
-        num_stages=4,
-        out_indices=(0, 1, 2, 3),
+        type='MulVGG',
+        depth=16,
+        num_stages=5,
+        out_indices=(1, 2, 3, 4),
         frozen_stages=1,
-        style='pytorch'
+        with_last_pool=True
     ),
     neck=dict(
         type='FPN',
-        in_channels=[256, 512, 1024, 2048],
-        out_channels=256,
+        in_channels=[128, 256, 512, 512],
+        out_channels=128,
         out_indices=[0, 1, 2, 3],
         num_outs=4),
     rpn_head=dict(
         type='RPNHead',
-        in_channels=256,
-        feat_channels=256,
-        anchor_ratios=[1/0.5, 1],
+        in_channels=128,
+        feat_channels=128,
+        anchor_ratios=[1 / 0.5, 1],
         anchor_scales=[8, 10, 12, 14],
         anchor_strides=[4, 8, 16, 32],
         anchor_base_sizes=[4, 8, 16, 32],
@@ -30,12 +30,12 @@ model = dict(
     bbox_roi_extractor=dict(
         type='SingleRoIExtractor',
         roi_layer=dict(type='RoIAlign', out_size=7, sample_num=2),
-        out_channels=256,
+        out_channels=128,
         featmap_strides=[4, 8, 16, 32]),
     bbox_head=dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
-        in_channels=256,
+        in_channels=128,
         fc_out_channels=256,
         roi_feat_size=7,
         num_classes=2,  # background and pederstrian
@@ -66,12 +66,12 @@ train_cfg = dict(
         debug=False,
         nms=dict(
             nms_across_levels=False,
-            nms_pre=5000,
-            nms_post=5000,
-            max_num=100,
-            nms_thr=0.7,
+            nms_pre=20000,
+            nms_post=2000,
+            max_num=5000,
+            nms_thr=0.9,
             min_bbox_size=0)
-            ),
+    ),
     rcnn=dict(
         assigner=dict(
             type='MaxIoUAssigner',
@@ -91,13 +91,13 @@ train_cfg = dict(
 test_cfg = dict(
     rpn=dict(
         nms_across_levels=False,
-        nms_pre=5000,
-        nms_post=5000,
-        max_num=40,
+        nms_pre=10000,
+        nms_post=10000,
+        max_num=300,
         nms_thr=0.7,
         min_bbox_size=0),
     rcnn=dict(
-        score_thr=0.5, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
+        score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'KaistDataset'
 data_root = '/media/ser606/Data/DoubleCircle/datasets/kaist-rgbt/'
@@ -152,7 +152,7 @@ lr_config = dict(
     # warmup='linear',
     # warmup_iters=2000,
     # warmup_ratio=1.0 / 3,
-    step=[5, 10])
+    step=[4, 8])
 checkpoint_config = dict(interval=1)
 # yapf:disable
 log_config = dict(
@@ -163,10 +163,10 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 20
+total_epochs = 25
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../../work_dirs/faster_rcnn_r50_fpn_cat_kaist'
+work_dir = '../../work_dirs/mul_faster_rcnn_v16_fpn_cat_kaist'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

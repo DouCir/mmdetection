@@ -1,7 +1,7 @@
 # model settings
 model = dict(
     type='FasterRCNN',
-    pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
+    pretrained='/media/ser606/Data/DoubleCircle/model/vgg16-397923af.pth',
     backbone=dict(
         type='VGG',
         depth=16,
@@ -155,7 +155,7 @@ log_config = dict(
 total_epochs = 25
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../../work_dirs/faster_rcnn_r50_c4_cvc'
+work_dir = '../../work_dirs/faster_rcnn_v16_c5_cvc'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
