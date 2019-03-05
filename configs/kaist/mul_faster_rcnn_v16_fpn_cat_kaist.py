@@ -1,7 +1,7 @@
 # model settings
 model = dict(
     type='FasterRCNNMulFPNCat',
-    pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
+    pretrained='/media/server606/Data/DoubleCircle/model/vgg16-397923af.pth',
     backbone=dict(
         type='MulVGG',
         depth=16,
@@ -29,7 +29,7 @@ model = dict(
         use_sigmoid_cls=False),
     bbox_roi_extractor=dict(
         type='SingleRoIExtractor',
-        roi_layer=dict(type='RoIAlign', out_size=7, sample_num=2),
+        roi_layer=dict(type='RoIAlign', out_size=7, sample_num=-1),
         out_channels=128,
         featmap_strides=[4, 8, 16, 32]),
     bbox_head=dict(
@@ -100,7 +100,7 @@ test_cfg = dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'KaistDataset'
-data_root = '/media/ser606/Data/DoubleCircle/datasets/kaist-rgbt/'
+data_root = '/media/server606/Data/DoubleCircle/datasets/kaist-rgbt/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 img_norm_cfg_t = dict(
@@ -115,7 +115,7 @@ data = dict(
         img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
         img_norm_cfg_t=img_norm_cfg_t,
-        size_divisor=None,
+        size_divisor=32,
         flip_ratio=0.5,
         with_mask=False,
         with_crowd=True,
@@ -127,7 +127,7 @@ data = dict(
         img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
         img_norm_cfg_t=img_norm_cfg_t,
-        size_divisor=None,
+        size_divisor=32,
         flip_ratio=0,
         with_mask=False,
         with_crowd=True,
