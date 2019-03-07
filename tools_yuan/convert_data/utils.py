@@ -62,6 +62,32 @@ def parse_xml(args):
     }
     return annotation
 
+"""
+Author:Yuan Yuan
+Date:2019/03/05
+Description:Prepare data for auto-encoder
+"""
+def parse_xml_coder(args):
+    xml_path, img_path, flag_coder = args
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    size = root.find('size')
+    w = int(size.find('width').text)
+    h = int(size.find('height').text)
+    annotation = {
+        'filename': img_path,
+        'width': w,
+        'height': h,
+        'flag': flag_coder,
+        'ann': {
+            'bboxes': None,
+            'labels': None,
+            'bboxes_ignore': None,
+            'labels_ignore': None
+        }
+    }
+    return annotation
+
 
 def track_progress_yuan(func, tasks, bar_width=50, **kwargs):
     """Track the progress of tasks execution with a progress bar.
