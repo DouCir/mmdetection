@@ -1,7 +1,7 @@
 import os.path as osp
 import mmcv
 import numpy as np
-from tools_yuan.convert_data.utils import parse_xml_coder
+from tools_yuan.convert_data.utils import parse_xml_cross
 from tools_yuan.convert_data.utils import track_progress_yuan
 import getpass
 
@@ -14,7 +14,7 @@ Location:SCU
 
 def main():
     xml_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt/annotations-xml/')
-    pkl_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt-encoder/annotations-pkl/')
+    pkl_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt-cross/annotations-pkl/')
     txt_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt/imageSets/')
     img_dir = osp.join('/media/', getpass.getuser(), 'Data/DoubleCircle/datasets/kaist-rgbt/images/')
     mmcv.mkdir_or_exist(pkl_dir)
@@ -27,6 +27,7 @@ def main():
                      img_all_names]
     xml_all_paths = np.array(xml_all_paths)
     img_all_paths = np.array(img_all_paths)
+    flags = ['train' for _ in img_all_paths]
 
     total_imgs = len(img_all_names)
     permutation = np.random.permutation(total_imgs)
@@ -35,18 +36,18 @@ def main():
     idx_rgb = permutation[base_num:base_num * 2]
     idx_thermal = permutation[base_num * 2:]
 
-    flags_coder = [0 for _ in img_all_names]
+    flags_model = [0 for _ in img_all_names]
     for idx in idx_mul:
-        flags_coder[idx] = 0
+        flags_model[idx] = 0
     for idx in idx_rgb:
-        flags_coder[idx] = 1
+        flags_model[idx] = 1
     for idx in idx_thermal:
-        flags_coder[idx] = 2
+        flags_model[idx] = 2
 
     xml_train_paths = xml_all_paths
     img_train_paths = img_all_paths
-    train_annotations = track_progress_yuan(parse_xml_coder,
-                                            list(zip(xml_train_paths, img_train_paths, flags_coder)))
+    train_annotations = track_progress_yuan(parse_xml_cross,
+                                            list(zip(xml_train_paths, img_train_paths, flags, flags_model)))
     mmcv.dump(train_annotations, osp.join(pkl_dir, 'train-all.pkl'))
 
     # all test images
@@ -55,16 +56,17 @@ def main():
     xml_test_paths = [osp.join(xml_dir, '{}.xml'.format(img_name)) for img_name in img_test_names]
     img_test_paths = [osp.join(img_dir, '{}.jpg'.format(img_name).replace('/I', '/visible/I')) for img_name in
                       img_test_names]
+    flags = ['test' for _ in img_test_paths]
     # test in RGB model
-    flags = [1 for _ in img_test_paths]
-    test_annotations = track_progress_yuan(parse_xml_coder,
-                                           list(zip(xml_test_paths, img_test_paths, flags)))
+    flags_model = [1 for _ in img_test_paths]
+    test_annotations = track_progress_yuan(parse_xml_cross,
+                                           list(zip(xml_test_paths, img_test_paths, flags, flags_model)))
     mmcv.dump(test_annotations, osp.join(pkl_dir, 'test-all-rgb.pkl'))
 
     # test in Thermal model
-    flags = [2 for _ in img_test_paths]
-    test_annotations = track_progress_yuan(parse_xml_coder,
-                                           list(zip(xml_test_paths, img_test_paths, flags)))
+    flags_model = [2 for _ in img_test_paths]
+    test_annotations = track_progress_yuan(parse_xml_cross,
+                                           list(zip(xml_test_paths, img_test_paths, flags, flags_model)))
     mmcv.dump(test_annotations, osp.join(pkl_dir, 'test-all-thermal.pkl'))
 
 

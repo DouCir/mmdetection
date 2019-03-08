@@ -64,9 +64,23 @@ def parse_xml(args):
 
 """
 Author:Yuan Yuan
+Date:2019/03/08
+Description:Prepare data for Faster RCNN which deals with cross-model 
+"""
+def parse_xml_cross(args):
+    xml_path, img_path, flag, flag_model = args
+    annotation = parse_xml((xml_path, img_path, flag))
+    annotation['flag'] = flag_model
+    return annotation
+
+
+"""
+Author:Yuan Yuan
 Date:2019/03/05
 Description:Prepare data for auto-encoder
 """
+
+
 def parse_xml_coder(args):
     xml_path, img_path, flag_coder = args
     tree = ET.parse(xml_path)
