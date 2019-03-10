@@ -1,6 +1,6 @@
 import torch.optim as optim
 from mmdet.auto_encoder import MultiAutoEncoder
-from mmdet.datasets import CoderDataset
+from mmdet.datasets import CoderKaistDataset
 from mmdet.datasets import build_dataloader
 from mmcv.runner import save_checkpoint
 import getpass
@@ -14,7 +14,7 @@ def adjust_learning_rate(optimizer,base_lr, epoch):
 
 def main():
     # base configs
-    data_root = '/media/' + getpass.getuser() + '/Data/DoubleCircle/datasets/kaist-rgb-t-eccoder'
+    data_root = '/media/' + getpass.getuser() + '/Data/DoubleCircle/datasets/kaist-rgb-t-encoder'
     img_norm_cfg = dict(
         mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
     img_norm_cfg_t = dict(
@@ -46,8 +46,8 @@ def main():
         with_mask=False,
         with_crowd=True,
         with_label=True)
-    dataset_train = CoderDataset(**train)
-    dataset_test = CoderDataset(**test)
+    dataset_train = CoderKaistDataset(**train)
+    dataset_test = CoderKaistDataset(**test)
 
     # train and test data loader
     data_loaders_train = build_dataloader(

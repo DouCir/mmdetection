@@ -9,7 +9,7 @@ from ..transforms import ImageTransform
 import cv2
 
 
-class CoderDataset(CustomDataset):
+class CoderKaistDataset(CustomDataset):
     def __init__(self,
                  ann_file,
                  img_prefix,
