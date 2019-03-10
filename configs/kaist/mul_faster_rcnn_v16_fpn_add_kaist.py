@@ -1,6 +1,6 @@
 # model settings
 model = dict(
-    type='FasterRCNNMulFPNCat',
+    type='FasterRCNNMulFPNAdd',
     pretrained='/media/ser606/Data/DoubleCircle/model/vgg16-397923af.pth',
     backbone=dict(
         type='MulVGG',
@@ -99,8 +99,8 @@ test_cfg = dict(
     rcnn=dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
-dataset_type = 'KaistCrossDataset'
-data_root = '/media/ser606/Data/DoubleCircle/datasets/kaist-rgbt-cross/'
+dataset_type = 'KaistDataset'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/kaist-rgbt/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 img_norm_cfg_t = dict(
@@ -122,7 +122,7 @@ data = dict(
         with_label=True),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotations-pkl/test-all-rgb.pkl',
+        ann_file=data_root + 'annotations-pkl/test-all.pkl',
         img_prefix=data_root + 'images/',
         img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
@@ -166,7 +166,7 @@ log_config = dict(
 total_epochs = 25
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../../work_dirs/cross_mul_faster_rcnn_v16_fpn_cat_kaist'
+work_dir = '../../work_dirs/mul_faster_rcnn_v16_fpn_add_kaist'
 load_from = None
-resume_from = None
+resume_from = '../../work_dirs/mul_faster_rcnn_v16_fpn_add_kaist/epoch_3.pth'
 workflow = [('train', 1)]

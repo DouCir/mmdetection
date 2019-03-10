@@ -66,12 +66,12 @@ class CoderDataset(CustomDataset):
         if flag == 1:
             img, img_shape, pad_shape, scale_factor = self.img_transform(
                 img, img_scale, flip)
-            img_t = np.zeros(img_t.shape)
+            img_t = np.zeros(img_t.shape).astype(img.dtype)
         # for thermal images
         if flag == 2:
             img_t, img_shape_t, pad_shape_t, scale_factor_t = self.img_transform_t(
                 img_t, img_scale, flip)
-            img = np.zeros(img.shape)
+            img = np.zeros(img.shape).astype(img_t.dtype)
 
         # for multispectral
         if flag == 0:

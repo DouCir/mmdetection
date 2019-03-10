@@ -29,7 +29,7 @@ class KaistCrossDataset(CustomDataset):
         # transforms
         self.img_transform_t = ImageTransform(
             size_divisor=size_divisor, **self.img_norm_cfg_t)
-        super(KaistDataset, self).__init__(
+        super(KaistCrossDataset, self).__init__(
             ann_file=ann_file,
             img_prefix=img_prefix,
             img_scale=img_scale,
@@ -118,9 +118,9 @@ class KaistCrossDataset(CustomDataset):
             flip=flip)
         flag_model = img_info['flag']
         if flag_model == 1:  # rgb single model
-            img_t = np.zeros(img.shape)
+            img_t = np.zeros(img.shape).astype(img.dtype)
         elif flag_model == 2:  # thermal single model
-            img = np.zeros(img.shape)
+            img = np.zeros(img.shape).astype(img_t.dtype)
         # default: multi-model
         data = dict(
             img=DC(to_tensor(img), stack=True),
@@ -210,9 +210,9 @@ class KaistCrossDataset(CustomDataset):
 
         flag_model = img_info['flag']
         if flag_model == 1:  # rgb single model
-            imgs_t = np.zeros(imgs.shape)
+            imgs_t = [np.zeros(imgs[0].shape).astype('float32') for _ in imgs_t]
         elif flag_model == 2:  # thermal single model
-            imgs = np.zeros(imgs.shape)
+            imgs = [np.zeros(imgs[0].shape).astype('float32') for _ in imgs]
         # default: multi-model
         data = dict(img=imgs, img_t=imgs_t, img_meta=img_metas)
         if self.proposals is not None:

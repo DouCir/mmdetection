@@ -1,26 +1,26 @@
 # model settings
 model = dict(
-    type='FasterRCNNMulFPNCat',
-    pretrained='/media/ser606/Data/DoubleCircle/model/vgg16-397923af.pth',
+    type='FasterRCNNMulFPNAdd',
+    pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
     backbone=dict(
-        type='MulVGG',
-        depth=16,
-        num_stages=5,
-        out_indices=(1, 2, 3, 4),
+        type='MulResnet',
+        depth=50,
+        num_stages=4,
+        out_indices=(0, 1, 2, 3),
         frozen_stages=1,
-        with_last_pool=True
+        style='pytorch'
     ),
     neck=dict(
         type='FPN',
-        in_channels=[128, 256, 512, 512],
-        out_channels=128,
+        in_channels=[256, 512, 1024, 2048],
+        out_channels=256,
         out_indices=[0, 1, 2, 3],
         num_outs=4),
     rpn_head=dict(
         type='RPNHead',
-        in_channels=128,
-        feat_channels=128,
-        anchor_ratios=[1 / 0.5, 1],
+        in_channels=256,
+        feat_channels=256,
+        anchor_ratios=[1/0.5, 1],
         anchor_scales=[8, 10, 12, 14],
         anchor_strides=[4, 8, 16, 32],
         anchor_base_sizes=[4, 8, 16, 32],
@@ -30,12 +30,12 @@ model = dict(
     bbox_roi_extractor=dict(
         type='SingleRoIExtractor',
         roi_layer=dict(type='RoIAlign', out_size=7, sample_num=-1),
-        out_channels=128,
+        out_channels=256,
         featmap_strides=[4, 8, 16, 32]),
     bbox_head=dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
-        in_channels=128,
+        in_channels=256,
         fc_out_channels=256,
         roi_feat_size=7,
         num_classes=2,  # background and pederstrian
@@ -71,7 +71,7 @@ train_cfg = dict(
             max_num=5000,
             nms_thr=0.9,
             min_bbox_size=0)
-    ),
+            ),
     rcnn=dict(
         assigner=dict(
             type='MaxIoUAssigner',
@@ -99,8 +99,8 @@ test_cfg = dict(
     rcnn=dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
-dataset_type = 'KaistCrossDataset'
-data_root = '/media/ser606/Data/DoubleCircle/datasets/kaist-rgbt-cross/'
+dataset_type = 'KaistDataset'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/kaist-rgbt/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 img_norm_cfg_t = dict(
@@ -115,19 +115,19 @@ data = dict(
         img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
         img_norm_cfg_t=img_norm_cfg_t,
-        size_divisor=32,
+        size_divisor=None,
         flip_ratio=0.5,
         with_mask=False,
         with_crowd=True,
         with_label=True),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotations-pkl/test-all-rgb.pkl',
+        ann_file=data_root + 'annotations-pkl/test-all.pkl',
         img_prefix=data_root + 'images/',
         img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
         img_norm_cfg_t=img_norm_cfg_t,
-        size_divisor=32,
+        size_divisor=None,
         flip_ratio=0,
         with_mask=False,
         with_crowd=True,
@@ -166,7 +166,7 @@ log_config = dict(
 total_epochs = 25
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../../work_dirs/cross_mul_faster_rcnn_v16_fpn_cat_kaist'
+work_dir = '../../work_dirs/mul_faster_rcnn_r50_fpn_add_kaist'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

@@ -53,6 +53,7 @@ def parse_xml(args):
         'filename': img_path,
         'width': w,
         'height': h,
+        'flag': 0,
         'ann': {
             'bboxes': bboxes.astype(np.float32),
             'labels': labels.astype(np.int64),
@@ -62,14 +63,19 @@ def parse_xml(args):
     }
     return annotation
 
+
 """
 Author:Yuan Yuan
 Date:2019/03/08
 Description:Prepare data for Faster RCNN which deals with cross-model 
 """
+
+
 def parse_xml_cross(args):
     xml_path, img_path, flag, flag_model = args
     annotation = parse_xml((xml_path, img_path, flag))
+    if annotation is None:
+        return None
     annotation['flag'] = flag_model
     return annotation
 

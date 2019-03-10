@@ -60,9 +60,9 @@ def _data_func(data, device_id):
 
 
 def main():
-    # configs = ['../../configs/caltech/rpn_v16_fpn_caltech.py']
-    # configs = ['../../configs/cvc09/faster_rcnn_r50_c4_cvc.py']
-    configs = ['../../configs/kaist/faster_rcnn_r50_c4_rgb_kaist.py']
+    configs = [
+        '../../configs/kaist-cross/cross_mul_faster_rcnn_r50_fpn_cat_kaist.py',
+    ]
     for config in configs:
         # load dataset
         cfg = mmcv.Config.fromfile(config)

@@ -27,7 +27,7 @@ class MulAddVGG(nn.Module):
                  bn_frozen=False,
                  ceil_mode=False,
                  with_last_pool=True):
-        super(MulCatVGG, self).__init__()
+        super(MulAddVGG, self).__init__()
         self.vgg_rgb = VGG(
             depth=depth,
             with_bn=with_bn,

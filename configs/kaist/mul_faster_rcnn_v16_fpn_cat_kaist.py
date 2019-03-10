@@ -1,7 +1,7 @@
 # model settings
 model = dict(
     type='FasterRCNNMulFPNCat',
-    pretrained='/media/server606/Data/DoubleCircle/model/vgg16-397923af.pth',
+    pretrained='/media/ser606/Data/DoubleCircle/model/vgg16-397923af.pth',
     backbone=dict(
         type='MulVGG',
         depth=16,
@@ -100,7 +100,7 @@ test_cfg = dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'KaistDataset'
-data_root = '/media/server606/Data/DoubleCircle/datasets/kaist-rgbt/'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/kaist-rgbt/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 img_norm_cfg_t = dict(
@@ -168,5 +168,5 @@ dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '../../work_dirs/mul_faster_rcnn_v16_fpn_cat_kaist'
 load_from = None
-resume_from = None
+resume_from = '../../work_dirs/mul_faster_rcnn_v16_fpn_cat_kaist/epoch_7.pth'
 workflow = [('train', 1)]

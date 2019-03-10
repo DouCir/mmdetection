@@ -4,6 +4,7 @@ from .kaist_single import KaistRGBDataset, KaistThermalDataset
 from .kaist import KaistDataset
 from .cvc_caltech import ExtendedCvcDataset
 from .coder_dataset import CoderDataset
+from .kaist_cross_model import KaistCrossDataset
 __all__ = ['CaltechDataset', 'CvcDataset', 'KaistDataset', 'KaistThermalDataset', 'KaistRGBDataset',
-           'ExtendedCvcDataset', 'CoderDataset'
+           'ExtendedCvcDataset', 'CoderDataset', 'KaistCrossDataset'
            ]
