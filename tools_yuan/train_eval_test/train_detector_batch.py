@@ -40,7 +40,7 @@ def main():
             # '../../configs/kaist/mul_faster_rcnn_v16_c5_add_kaist.py',
             # '../../configs/kaist/mul_faster_rcnn_v16_fpn_add_kaist.py',
 
-            '../../configs/kaist-cross/cross_mul_faster_rcnn_r50_fpn_cat_kaist.py',
+            # '../../configs/kaist-cross/cross_mul_faster_rcnn_r50_fpn_cat_kaist.py',
             '../../configs/kaist-cross/cross_mul_faster_rcnn_v16_fpn_cat_kaist.py'
 
         ]

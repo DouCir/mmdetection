@@ -3,13 +3,12 @@ import os.path as osp
 
 import mmcv
 import numpy as np
-from mmcv.parallel import DataContainer as DC
 from ..utils import to_tensor, random_scale
 from ..transforms import ImageTransform
 import cv2
 
 
-class CoderKaistDataset(CustomDataset):
+class CoderSingleDataset(CustomDataset):
     def __init__(self,
                  ann_file,
                  img_prefix,
@@ -28,7 +27,7 @@ class CoderKaistDataset(CustomDataset):
         # transforms
         self.img_transform_t = ImageTransform(
             size_divisor=size_divisor, **self.img_norm_cfg_t)
-        super(CoderKaistDataset, self).__init__(
+        super(CoderSingleDataset, self).__init__(
             ann_file=ann_file,
             img_prefix=img_prefix,
             img_scale=img_scale,
@@ -58,6 +57,8 @@ class CoderKaistDataset(CustomDataset):
         img_t_path = osp.join(self.img_prefix, img_info['filename']).replace('visible', 'lwir')
         img_t = cv2.imread(img_t_path)  # three channels,??? img_t[:,:,0]==img_t[:,:,2]!= img_t[:,:,1]
         img_t[:, :, 1] = img_t[:, :, 0]
+        if img_t[0].max() > 140:
+            a = 10
         # apply transforms
         flip = True if np.random.rand() < self.flip_ratio else False
         img_scale = random_scale(self.img_scales)  # sample a scale
@@ -65,15 +66,10 @@ class CoderKaistDataset(CustomDataset):
             img, img_scale, flip)
         img_t, img_shape_t, pad_shape_t, scale_factor_t = self.img_transform_t(
             img_t, img_scale, flip)
+
         data = dict(
             img_rgb_out=to_tensor(img),
             img_thermal_out=to_tensor(img_t))
-        # for rgb images
-        if flag == 1:
-            img_t = np.zeros(img_t.shape).astype(img.dtype)
-        # for thermal images
-        elif flag == 2:
-            img = np.zeros(img.shape).astype(img_t.dtype)
         # default multispectral
         ori_shape = (img_info['height'], img_info['width'], 3)
         img_meta = dict(
