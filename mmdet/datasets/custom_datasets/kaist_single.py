@@ -35,7 +35,6 @@ class KaistRGBDataset(CustomDataset):
             with_label=with_label,
             test_mode=test_mode)
 
-
 # for Thermal images in KAIST dataset
 class KaistThermalDataset(CustomDataset):
 

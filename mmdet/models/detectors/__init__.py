@@ -17,11 +17,20 @@ from .two_stage_mul import TwoStageDetectorMul
 from .faster_rcnn_mul import FasterRCNNMul
 from .faster_rcnn_fpn_add import TwoStageDetectorFPNAdd
 from .faster_rcnn_fpn_cat import FasterRCNNMulFPNCat
+from .base_cross import BaseDetectorCross
+from .two_stage_cross import TwoStageDetectorCross
+from .faster_rcnn_fpn_cross import FasterRCNNMulCross
+from .two_stage_pre_fpn_add import TwoStageDetectorPreFPNAdd
+from .two_stage_pre_fpn_cat import TwoStageDetectorPreFPNCat
+from .faster_rcnn_pre_fpn_add import FasterRCNNMulPreFPNAdd
+from .faster_rcnn_pre_fpn_cat import FasterRCNNMulPreFPNCat
 
 __all__ = [
     'BaseDetector', 'SingleStageDetector', 'TwoStageDetector', 'RPN',
     'FastRCNN', 'FasterRCNN', 'MaskRCNN', 'CascadeRCNN', 'RetinaNet',
     'TwoStageDetectorMul', 'FasterRCNNMul', 'BaseDetectorMul',
     'TwoStageDetectorFPNAdd', 'FasterRCNNMulFPNCat',
-    'TwoStageDetectorMul', 'FasterRCNNMul', 'BaseDetectorMul', 'FasterRCNNYuan'
+    'TwoStageDetectorMul', 'FasterRCNNMul', 'BaseDetectorMul', 'FasterRCNNYuan',
+    'BaseDetectorCross', 'TwoStageDetectorCross', 'FasterRCNNMulCross',
+    'FasterRCNNMulPreFPNCat', 'FasterRCNNMulPreFPNAdd'
 ]

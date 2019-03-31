@@ -29,7 +29,8 @@ def main():
     img_all_paths = np.array(img_all_paths)
 
     total_imgs = len(img_all_names)
-    permutation = np.random.permutation(total_imgs)
+    permutation = np.random.permutation(total_imgs)  # select images randomly
+    # permutation = np.arange(total_imgs)  # select images in order
     base_num = int(1.0 / 3 * total_imgs)
     idx_mul = permutation[0:base_num]
     idx_rgb = permutation[base_num:base_num * 2]

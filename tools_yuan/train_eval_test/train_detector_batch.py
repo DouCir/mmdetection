@@ -8,6 +8,7 @@ from mmdet.models import build_detector
 import os
 import os.path as osp
 import getpass
+import torch
 
 """
 Author:Yuan Yuan
@@ -41,8 +42,17 @@ def main():
             # '../../configs/kaist/mul_faster_rcnn_v16_fpn_add_kaist.py',
 
             # '../../configs/kaist-cross/cross_mul_faster_rcnn_r50_fpn_cat_kaist.py',
-            '../../configs/kaist-cross/cross_mul_faster_rcnn_v16_fpn_cat_kaist.py'
+            # '../../configs/kaist-cross/cross_mul_faster_rcnn_v16_fpn_cat_kaist.py'
 
+            # '../../configs/kaist/cross_faster_rcnn_v16_fpn_cross_kaist.py'
+            # '../../configs/kaist/cross_faster_rcnn_r50_fpn_cross_kaist.py'
+
+
+            #'../../configs/kaist/cross_faster_rcnn_r50_fpn_cross_thermal_kaist.py'
+            # '../../configs/kaist/cross_faster_rcnn_r50_c4_cross_kaist.py'
+
+            # '../../configs/kaist/cross_faster_rcnn_v16_fpn_cross_thermal_kaist.py',
+            '../../configs/kaist/cross_faster_rcnn_v16_c5_cross_kaist.py'
         ]
 
 

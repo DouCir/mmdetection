@@ -7,6 +7,7 @@ from mmcv.parallel import DataContainer as DC
 from ..utils import to_tensor, random_scale
 from ..transforms import ImageTransform
 import cv2
+import math
 
 
 class CoderKaistDataset(CustomDataset):
@@ -65,6 +66,73 @@ class CoderKaistDataset(CustomDataset):
             img, img_scale, flip)
         img_t, img_shape_t, pad_shape_t, scale_factor_t = self.img_transform_t(
             img_t, img_scale, flip)
+        # divide image into patches
+        stride_h = 160
+        stride_v = 128
+        num_h = math.floor((img_info['width'] - 160) / stride_h) + 1
+        num_v = math.floor((img_info['height'] - 128) / stride_v) + 1
+        img_patches = np.zeros((num_h * num_v, 3, 128, 160), dtype=np.float32)
+        img_t_patches = np.zeros((num_h * num_v, 3, 128, 160), dtype=np.float32)
+        for i in range(num_v):
+            for j in range(num_h):
+                img_patches[i * num_h + j, ...] = img[:, (i * stride_v):(i * stride_v + 128),
+                                                  (j * stride_h):(j * stride_h + 160)]
+                img_t_patches[i * num_h + j, ...] = img_t[:, (i * stride_v):(i * stride_v + 128),
+                                                    (j * stride_h):(j * stride_h + 160)]
+        data = dict(
+            img_rgb_out=to_tensor(img_patches),
+            img_thermal_out=to_tensor(img_t_patches))
+        # for rgb images
+        if flag == 1:
+            img_t = np.zeros(img_t.shape).astype(img.dtype)
+        # for thermal images
+        elif flag == 2:
+            img = np.zeros(img.shape).astype(img_t.dtype)
+        # default multispectral
+        ori_shape = (img_info['height'], img_info['width'], 3)
+        img_meta = dict(
+            ori_shape=ori_shape,
+            img_shape=img_shape,
+            pad_shape=pad_shape,
+            scale_factor=scale_factor,
+            flip=flip)
+
+        img_patches = np.zeros((num_h * num_v, 3, 128, 160), dtype=np.float32)
+        img_t_patches = np.zeros((num_h * num_v, 3, 128, 160), dtype=np.float32)
+        for i in range(num_v):
+            for j in range(num_h):
+                img_patches[i * num_h + j, ...] = img[:, (i * stride_v):(i * stride_v + 128),
+                                                  (j * stride_h):(j * stride_h + 160)]
+                img_t_patches[i * num_h + j, ...] = img_t[:, (i * stride_v):(i * stride_v + 128),
+                                                    (j * stride_h):(j * stride_h + 160)]
+        data['img_meta'] = img_meta
+        data['img_rgb_in'] = to_tensor(img_patches)
+        data['img_thermal_in'] = to_tensor(img_t_patches)
+        return data
+
+    def prepare_test_img(self, idx):
+        img_info = self.img_infos[idx]
+        flag = img_info['flag']
+        # load image(rgb)
+        img_temp = mmcv.imread(osp.join(self.img_prefix, img_info['filename']))
+        if img_temp.shape[2] == 1:
+            img = np.zeros((img_temp.shape[0], img_temp.shape[1], 3))
+            img[:, :, 0] = img_temp
+            img[:, :, 1] = img_temp
+            img[:, :, 2] = img_temp
+        else:
+            img = img_temp
+        # load image(thermal)
+        img_t_path = osp.join(self.img_prefix, img_info['filename']).replace('visible', 'lwir')
+        img_t = cv2.imread(img_t_path)  # three channels,??? img_t[:,:,0]==img_t[:,:,2]!= img_t[:,:,1]
+        img_t[:, :, 1] = img_t[:, :, 0]
+        # apply transforms
+        flip = True if np.random.rand() < self.flip_ratio else False
+        img_scale = random_scale(self.img_scales)  # sample a scale
+        img, img_shape, pad_shape, scale_factor = self.img_transform(
+            img, img_scale, flip)
+        img_t, img_shape_t, pad_shape_t, scale_factor_t = self.img_transform_t(
+            img_t, img_scale, flip)
         data = dict(
             img_rgb_out=to_tensor(img),
             img_thermal_out=to_tensor(img_t))
@@ -87,6 +155,3 @@ class CoderKaistDataset(CustomDataset):
         data['img_rgb_in'] = to_tensor(img)
         data['img_thermal_in'] = to_tensor(img_t)
         return data
-
-    def prepare_test_img(self, idx):
-        return self.prepare_train_img(idx)

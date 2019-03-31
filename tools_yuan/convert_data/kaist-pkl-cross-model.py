@@ -39,8 +39,8 @@ def main():
     flags_model = [0 for _ in img_all_names]
     for idx in idx_mul:
         flags_model[idx] = 0
-        flags_model[idx] = 1
     for idx in idx_rgb:
+        flags_model[idx] = 1
     for idx in idx_thermal:
         flags_model[idx] = 2
 

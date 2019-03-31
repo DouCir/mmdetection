@@ -61,7 +61,8 @@ def _data_func(data, device_id):
 
 def main():
     configs = [
-        '../../configs/kaist-cross/cross_mul_faster_rcnn_r50_fpn_cat_kaist.py',
+        # '../../configs/kaist/mul_faster_rcnn_v16_fpn_add_kaist.py',
+        '../../configs/kaist/cross_faster_rcnn_v16_fpn_cross_kaist.py',
     ]
     for config in configs:
         # load dataset
