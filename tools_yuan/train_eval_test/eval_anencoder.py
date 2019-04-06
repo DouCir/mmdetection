@@ -36,9 +36,9 @@ def main():
 
     # test dataset
     test = dict(
-        ann_file=data_root + 'annotations-pkl/test-all-thermal.pkl',
+        ann_file=data_root + 'annotations-pkl/test-all-rgb.pkl',
         img_prefix=data_root + 'images/',
-        img_scale=1.0,
+        img_scale=1.5,
         img_norm_cfg=img_norm_cfg,
         img_norm_cfg_t=img_norm_cfg_t,
         size_divisor=None,
@@ -69,7 +69,7 @@ def main():
 
             loss_rgb = loss_fn(decode_rgb.cpu(), data_batch['img_rgb_out'])
             loss_thermal = loss_fn(decode_thermal.cpu(), data_batch['img_thermal_out'])
-            loss_total = loss_thermal + loss_thermal
+            loss_total = loss_thermal + loss_rgb
             print('Evaluation:[{}|{}],Loss:{}\n'.format(i, len(data_loaders_test), loss_total))
 
             output_rgb = decode_rgb.cpu().data
@@ -103,16 +103,16 @@ def main():
                 target_img_t = tartget_thermal[idx, ...].numpy().transpose(1, 2, 0).astype(np.float32)
                 target_pic_thermal[idx, :, :, :] = mmcv.imdenormalize(
                     target_img_t, mean=mean_thermal, std=std_thermal, to_bgr=False).astype(np.uint8)
-            if not os.path.exists('../../work_dirs/autoencoder/test_thermal'):
-                os.mkdir('../../work_dirs/autoencoder/test_thermal')
+            if not os.path.exists('../../work_dirs/autoencoder/test_rgb'):
+                os.mkdir('../../work_dirs/autoencoder/test_rgb')
             save_images(torch.from_numpy(pic_rgb.transpose((0, 3, 1, 2))),
-                        '../../work_dirs/autoencoder/test_thermal/image_rgb_{}.png'.format(i + 1))
+                        '../../work_dirs/autoencoder/test_rgb/image_rgb_{}.png'.format(i + 1))
             save_images(torch.from_numpy(target_pic_rgb.transpose(0, 3, 1, 2)),
-                        '../../work_dirs/autoencoder/test_thermal/target_image_rgb_{}.png'.format(i + 1))
+                        '../../work_dirs/autoencoder/test_rgb/target_image_rgb_{}.png'.format(i + 1))
             save_images(torch.from_numpy(pic_thermal.transpose((0, 3, 1, 2))),
-                        '../../work_dirs/autoencoder/test_thermal/image_thermal_{}.png'.format(i + 1))
+                        '../../work_dirs/autoencoder/test_rgb/image_thermal_{}.png'.format(i + 1))
             save_images(torch.from_numpy(target_pic_thermal.transpose(0, 3, 1, 2)),
-                        '../../work_dirs/autoencoder/test_thermal/target_image_thermal_{}.png'.format(i + 1))
+                        '../../work_dirs/autoencoder/test_rgb/target_image_thermal_{}.png'.format(i + 1))
 
 
 if __name__ == '__main__':

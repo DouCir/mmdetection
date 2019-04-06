@@ -6,7 +6,7 @@ from .test_mixins import RPNTestMixin, BBoxTestMixin, MaskTestMixin
 from .. import builder
 from ..registry import DETECTORS
 from mmdet.core import bbox2roi, bbox2result, build_assigner, build_sampler
-from mmdet.auto_encoder import AutoEncoder
+# from mmdet.auto_encoder import AutoEncoder
 from mmcv.runner import load_checkpoint
 
 
@@ -29,7 +29,7 @@ class TwoStageDetectorCross(BaseDetectorCross, RPNTestMixin, BBoxTestMixin,
         super(TwoStageDetectorCross, self).__init__()
         self.backbone = builder.build_backbone(backbone)
         self.autoencoder = AutoEncoder()
-        load_checkpoint(self.autoencoder, '../../work_dirs/autoencoder/epoch_28.pth')
+        load_checkpoint(self.autoencoder, '../../work_dirs/autoencoder/epoch_50.pth')
         self.autoencoder.eval()
 
         if neck is not None:

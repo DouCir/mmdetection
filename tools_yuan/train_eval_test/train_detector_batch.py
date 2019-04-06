@@ -48,11 +48,17 @@ def main():
             # '../../configs/kaist/cross_faster_rcnn_r50_fpn_cross_kaist.py'
 
 
-            #'../../configs/kaist/cross_faster_rcnn_r50_fpn_cross_thermal_kaist.py'
+            # '../../configs/kaist/cross_faster_rcnn_r50_fpn_cross_thermal_kaist.py',
             # '../../configs/kaist/cross_faster_rcnn_r50_c4_cross_kaist.py'
 
             # '../../configs/kaist/cross_faster_rcnn_v16_fpn_cross_thermal_kaist.py',
-            '../../configs/kaist/cross_faster_rcnn_v16_c5_cross_kaist.py'
+            # '../../configs/kaist/cross_faster_rcnn_v16_c5_cross_kaist.py'
+
+            # '../../configs/kaist/mul_faster_rcnn_v16_pre_fpn_add_kaist.py',
+            # '../../configs/kaist/mul_faster_rcnn_v16_pre_fpn_cat_kaist.py',
+            #
+            # '../../configs/kaist/mul_faster_rcnn_r50_pre_fpn_add_kaist.py',
+            '../../configs/kaist/mul_faster_rcnn_r50_pre_fpn_cat_kaist.py',
         ]
 
 
