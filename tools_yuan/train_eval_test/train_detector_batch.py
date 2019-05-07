@@ -21,6 +21,12 @@ def main():
 
     configs = \
         [
+
+            # '../../configs/cvc09/faster_rcnn_r50_c4_cvc.py',
+            # '../../configs/cvc09/faster_rcnn_r50_fpn_cvc.py',
+            # '../../configs/cvc09/faster_rcnn_v16_c5_cvc.py',
+            # '../../configs/cvc09/faster_rcnn_v16_fpn_cvc.py',
+
             # '../../configs/caltech/faster_rcnn_r50_fpn_caltech.py',
             # '../../configs/caltech/faster_rcnn_r50_c4_caltech.py'
 
@@ -44,21 +50,16 @@ def main():
             # '../../configs/kaist-cross/cross_mul_faster_rcnn_r50_fpn_cat_kaist.py',
             # '../../configs/kaist-cross/cross_mul_faster_rcnn_v16_fpn_cat_kaist.py'
 
-            # '../../configs/kaist/cross_faster_rcnn_v16_fpn_cross_kaist.py'
-            # '../../configs/kaist/cross_faster_rcnn_r50_fpn_cross_kaist.py'
-
-
-            # '../../configs/kaist/cross_faster_rcnn_r50_fpn_cross_thermal_kaist.py',
-            # '../../configs/kaist/cross_faster_rcnn_r50_c4_cross_kaist.py'
-
-            # '../../configs/kaist/cross_faster_rcnn_v16_fpn_cross_thermal_kaist.py',
-            # '../../configs/kaist/cross_faster_rcnn_v16_c5_cross_kaist.py'
+            # '../../configs/kaist/cross_faster_rcnn_v16_c5_cross_kaist.py',
+            # '../../configs/kaist/cross_faster_rcnn_v16_fpn_cross_kaist.py',
+            '../../configs/kaist/cross_faster_rcnn_r50_c4_cross_kaist.py',
+            '../../configs/kaist/cross_faster_rcnn_r50_fpn_cross_kaist.py',
 
             # '../../configs/kaist/mul_faster_rcnn_v16_pre_fpn_add_kaist.py',
             # '../../configs/kaist/mul_faster_rcnn_v16_pre_fpn_cat_kaist.py',
             #
             # '../../configs/kaist/mul_faster_rcnn_r50_pre_fpn_add_kaist.py',
-            '../../configs/kaist/mul_faster_rcnn_r50_pre_fpn_cat_kaist.py',
+            # '../../configs/kaist/mul_faster_rcnn_r50_pre_fpn_cat_kaist.py',
         ]
 
 

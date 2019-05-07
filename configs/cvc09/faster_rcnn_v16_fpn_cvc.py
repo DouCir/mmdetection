@@ -158,10 +158,10 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 25
+total_epochs = 20
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '../../work_dirs/faster_rcnn_v16_fpn_cvc'
 load_from = None
-resume_from = '../../work_dirs/faster_rcnn_v16_fpn_cvc/epoch_3.pth'
+resume_from = None
 workflow = [('train', 1)]

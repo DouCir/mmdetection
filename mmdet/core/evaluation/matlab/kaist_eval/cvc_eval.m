@@ -22,6 +22,12 @@ subset =[dataDir,'/imageSets/test-all.txt'];
 %% evaluating detection results
 [gt,dt]=bbGt2('loadAll',gtDir,dtDir,pLoad,subset);
 max_score_list = [];
+for ii=1:length(gt)
+    if ~isempty(gt{ii})
+        gt{ii}(:,1) = gt{ii}(:,1) - gt{ii}(:,3)/2;
+        gt{ii}(:,2) = gt{ii}(:,2) - gt{ii}(:,4)/2;
+    end
+end
 for ii=1:length(dt)
     if ~isempty(dt{ii})
         dt{ii}(:,3) = dt{ii}(:,3) - dt{ii}(:,1) + 1;

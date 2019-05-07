@@ -1,7 +1,7 @@
 # model settings
 model = dict(
     type='FasterRCNN',
-    pretrained='/media/server606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
+    pretrained='/media/ser606/Data/DoubleCircle/model/resnet50-19c8e357.pth',
     backbone=dict(
         type='ResNet',
         depth=50,
@@ -100,7 +100,7 @@ test_cfg = dict(
         score_thr=0.1, nms=dict(type='nms', iou_thr=0.5), max_per_img=40))
 # dataset settings
 dataset_type = 'KaistRGBDataset'
-data_root = '/media/server606/Data/DoubleCircle/datasets/kaist-rgbt/'
+data_root = '/media/ser606/Data/DoubleCircle/datasets/kaist-rgbt/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 data = dict(
@@ -164,5 +164,5 @@ dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '../../work_dirs/faster_rcnn_r50_fpn_rgb_kaist'
 load_from = None
-resume_from = '../../work_dirs/faster_rcnn_r50_fpn_rgb_kaist/epoch_5.pth'
+resume_from = None
 workflow = [('train', 1)]

@@ -30,7 +30,7 @@ model = dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
         in_channels=512,
-        fc_out_channels=512,
+        fc_out_channels=256,
         roi_feat_size=7,
         num_classes=2,  # background and pederstrian
         target_means=[0., 0., 0., 0.],
@@ -152,7 +152,7 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 25
+total_epochs = 20
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '../../work_dirs/faster_rcnn_v16_c5_cvc'

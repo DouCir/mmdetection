@@ -46,7 +46,7 @@ def single_test(model, data_loader, show=False):
 
         if show:
             model.module.show_result(data, result,
-                                     data_loader.dataset.img_norm_cfg)
+                                     data_loader.dataset.img_norm_cfg, dataset=['person'], score_thr=0.1)
 
         batch_size = data['img'][0].size(0)
         for _ in range(batch_size):
